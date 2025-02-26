@@ -29,7 +29,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'blogs',
+    'ckeditor',
+    'ckeditor_uploader',
+    'crispy_forms',
+    "crispy_bootstrap4",
+    'dashboard',
 ]
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'enterMode': 2,  # Forces line breaks instead of paragraphs
+        'shiftEnterMode': 1,  # Shift + Enter still inserts a <br> tag
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blogs.context_processors.get_categories'
             ],
         },
     },
@@ -116,3 +133,10 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Media files configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

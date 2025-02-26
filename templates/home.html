@@ -1,14 +1,87 @@
-{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Website</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <h1>This is my first blog page</h1>
-</body>
-</html>
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+
+<!-- Banner Featured Post -->
+{% for post in featured_post %}
+ {% if forloop.first %}
+ <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark" style="background-image: url('{{ post.blog_image.url }}');
+         background-blend-mode: overlay;
+         background-size: cover;
+         background-color: rgba(0, 0, 0, 0.5);">
+
+    <div class="col-md-8 px-0">
+      <h1 class="display-4 font-italic"><a href="{% url 'blogs' post.slug %}">{{ post.title }}</a></h1>
+      <p class="lead my-3">{{ post.short_description | truncatewords:25 }}</p>
+      <p class="lead mb-0"><a href="{% url 'blogs' post.slug %}" class="text-white">Continue reading ...</a></p>
+    </div>
+</div>
+ {% endif %}
+{% endfor %}
+
+<!-- Featured Post -->
+<h3 class="text-danger" style="letter-spacing: 2px;  font-size: 20px;">Featured Post</h3>
+  <div class="row mb-2">
+    {% for post in featured_post %}
+     {% if not forloop.first %}
+    <div class="col-md-6">
+      <div class="card border-0" >
+        <div class="card-body">
+          <h3><a href="{% url 'blogs' post.slug %}">{{ post.title }}</a></h3>
+          <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
+          {% if post.blog_image %}
+              <img src="{{ post.blog_image.url }}" alt="{{ post.title }}" 
+                   class="img-fluid rounded mb-3" 
+                   style="width: 100%; height: 200px; object-fit: cover;">
+            {% endif %}
+          <p class="card-text">{{ post.short_description | truncatewords:20 }}</p>
+        </div>
+      </div>
+    </div>
+     {% endif %}
+    {% endfor %}
+  </div>
+
+<!-- Recent article -->
+<h3 class="text-danger" style="letter-spacing: 2px; font-size: 20px;">Recent Articles</h3>
+  <main role="main" class="container p-0">
+    <div class="row">
+      <div class="col-md-8 blog-main">
+        {% for post in posts %}
+          <div class="card border-0" >
+            <div class="card-body">
+              <h3><a href="{% url 'blogs' post.slug %}">{{ post.title }}</a></h3>
+              <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
+              <p class="card-text">{{ post.short_description | truncatewords:30 }}</p>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
+      <!-- /.blog-main -->
+
+      <aside class="col-md-4 blog-sidebar">
+    
+        <div class="p-3 mb-3 bg-light rounded">
+            <h4 class="text-dark"><i class="fa fa-users"></i> Join the Community!</h4>
+            <p class="mb-0 text-dark">Your voice matters! Feel free to comment, share, and engage with our articles. You can also follow us on GitHub, LinkedIn, and social media for updates on new posts.</p>
+        </div>
+    
+    
+        <div class="p-3 mb-3 bg-light rounded">
+            <h4 class="text-dark"><i class="fa fa-user"></i> Follow Us </h4>
+            <ol class="list-unstyled">
+              <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+              <li><a href="#"><i class="fab fa-youtube"></i> Youtube</a></li>
+            </ol>
+        </div>
+    </aside><!-- /.blog-sidebar -->
+    
+
+    </div><!-- /.row -->
+
+  </main><!-- /.container -->
+
+</div>
+{% endblock %}

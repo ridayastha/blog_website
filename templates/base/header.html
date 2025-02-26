@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridaya Blogs | Inspiring Stories</title>
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+  </head>
+<body>
+    <div class="container">
+
+      <header class="blog-header py-3">
+        <div class="row align-items-center">
+          <!-- Logo -->
+          <div class="col-12 col-md-3 text-center text-md-left">
+            <a class="blog-header-logo text-dark font-weight-bold" href="/">Cherry.</a>
+          </div>
+      
+          <!-- Search Bar -->
+          <div class="col-12 col-md-5">
+            <form action="{% url 'search' %}" method="GET">
+              <div class="input-group">
+                <input class="form-control" name="keyword" type="text" placeholder="Enter search term..." aria-label="Enter search term..." />
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-dark">Search</button>
+                </div>
+              </div>
+            </form>
+          </div>
+      
+          <!-- Auth Buttons -->
+          <div class="col-12 col-md-4 d-flex justify-content-center justify-content-md-end mt-2 mt-md-0">
+            {% if not user.is_authenticated %}
+              <a class="btn btn-sm btn-outline-dark mr-2" href="{% url 'login' %}">Login</a>
+              <a class="btn btn-sm btn-dark" href="{% url 'register' %}">Register</a>
+            {% else %}
+              <a href="{% url 'dashboard' %}" class="btn btn-sm btn-dark text-white mr-2">Dashboard</a>
+              <a href="{% url 'logout' %}" class="btn btn-sm btn-danger">Logout</a>
+            {% endif %}
+          </div>
+        </div>
+      </header>
+      
+
+      <div class="nav-scroller py-1 mb-2 bg-light border-bottom border-dark shadow-sm">
+        <nav class="nav d-flex justify-content-between align-items-center">
+          {% for cat in categories %}
+          <a class="p-2 text-dark text-uppercase font-weight-bold" href="{% url 'posts_by_category' cat.id %}">{{ cat.category_name }}</a>
+          {% endfor %}
+        </nav>
+      </div>
+    
