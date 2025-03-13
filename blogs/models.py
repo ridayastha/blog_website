@@ -26,7 +26,7 @@ class Blogs(models.Model):
     slug = models.SlugField(unique=True, blank=True) # slug is a part of an url that identifies the particular page on a website.
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    blog_image = models.ImageField(upload_to='uploads/%Y/%m/%d')
+    blog_image = models.ImageField(upload_to='uploads/%Y/%m/%d', default='default.jpg')
     short_description = models.TextField(max_length=1000)
     blog_body = RichTextField()
     status = models.CharField(max_length=100, choices = STATUS_CHOICE, default='draft')
@@ -41,6 +41,14 @@ class Blogs(models.Model):
         return self.title
     
     
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blogs, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.comment
 
     
