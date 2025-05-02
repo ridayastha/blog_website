@@ -1,6 +1,6 @@
 /* stylelint-disable selector-list-comma-newline-after */
 *{
-  font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  /* font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif; */
   /* font-family: 'Oswald', sans-serif; */
 }
 
@@ -20,21 +20,21 @@ a:hover{
 
 /* for font logo */
 .blog-header-logo {
-  font-size: 2rem;
+  font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
 }
-
-
-/* logo-img
-.logo-img {
-  width: 40px;
-  height: auto; 
-  margin-right: 10px;
-  margin-bottom: 15px;
-} */
 
 .blog-header-logo:hover {
   text-decoration: none;
 }
+
+/* logo-img */
+.logo-img {
+  width: 70px;
+  height: auto; 
+  margin-bottom: 15px;
+}
+
 
 .display-4 {
   font-size: 2.5rem;
@@ -60,9 +60,7 @@ a:hover{
   margin-bottom: 4rem;
 }
 
-/*
- * Blog posts
- */
+/** Blog posts */
 .blog-post {
   margin-bottom: 4rem;
 }
@@ -74,9 +72,7 @@ a:hover{
   color: #727272;
 }
 
-/*
- * Footer
- */
+/** Footer */
 .blog-footer {
   padding: 2.5rem 0;
   color: #727272;
@@ -159,5 +155,6 @@ h1 a:hover {
       font-size: 12px;
   }
 }
+
 
 
