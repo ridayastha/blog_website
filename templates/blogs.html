@@ -1,91 +1,170 @@
 {% extends './base/base.html' %}
+{% load static %}
 
 {% block content %}
-
-<!-- Page content-->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Post content-->
-            <article>
-                <!-- Post header-->
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Main Content -->
+        <main class="col-lg-8">
+            <article class="blog-post">
+                <!-- Post Header -->
                 <header class="mb-4">
-                    <!-- Post title-->
-                    <h1 class="fw-bolder mb-1">{{ single_post.title }}</h1>
-                    <!-- Post meta content-->
-                    <div class="text-muted fst-italic mb-2">Posted on {{ single_post.created_at }} by {{ single_post.author }} </div>
-                    <!-- Post category-->
-                    <a class="badge bg-warning text-decoration-none text-light" href="#!">{{ single_post.category }}</a>
-                </header>
-                <!-- Preview image figure-->
-                <figure class="mb-4"><img class="img-fluid rounded" src="{{ single_post.blog_image.url }}" alt="..." /></figure>
-                <!-- Post content-->
-                <section class="mb-5">
-                    <p class="fs-5 mb-4">{{ single_post.short_description | safe }}</p>
-                    <p class="fs-5 mb-4">{{ single_post.blog_body | safe}}</p>
-
-                    <!-- comments -->
-                     <h4>Comments({{ comment_count }})</h4>
-                     {% if comments %}
-                      {% for comment in comments %}
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-text mb-0">{{ comment }}</p>
-                                <span>
-                                    <small>{{ comment.user }}</small>
-                                    <small>{{ comment.created_at | timesince }} ago </small>
-                                </span>
+                    <!-- Category Badge -->
+                    <div class="mb-3">
+                        <a href="{% url 'posts_by_category' single_post.category.id %}" 
+                           class="badge bg-warning text-dark text-decoration-none rounded-pill px-3 py-2">
+                            {{ single_post.category }}
+                        </a>
+                    </div>
+                    
+                    <!-- Title -->
+                    <h1 class="display-5 fw-bold mb-3">{{ single_post.title }}</h1>
+                    
+                    <!-- Meta -->
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="d-flex align-items-center me-4">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">By {{ single_post.author }}</small>
+                                <small class="text-muted d-block">{{ single_post.created_at|date:"F j, Y" }}</small>
                             </div>
                         </div>
-                      {% endfor %}
-                     {% else %}
-                     No Comments Yet
-                     {% endif %}
-                     <div class="form-group">
-                        {% if user.is_authenticated %}
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <textarea name="comment" class="form-control" placeholder="Write your Comment"></textarea>
-                                <input type="submit" class="btn btn-primary mt-2">
+                        <div class="text-muted">
+                            <i class="far fa-clock me-1"></i>
+                            <small>{{ single_post.read_time }} min read</small>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <figure class="mb-4">
+                    <img src="{{ single_post.blog_image.url }}" 
+                         class="img-fluid rounded-3 shadow-sm w-100" 
+                         alt="{{ single_post.title }}"
+                         style="max-height: 500px; object-fit: cover;">
+                </figure>
+
+                <!-- Post Content -->
+                <section class="article-content mb-5">
+                    <div class="lead mb-4">{{ single_post.short_description|safe }}</div>
+                    <div class="article-body">{{ single_post.blog_body|safe }}</div>
+                </section>
+
+                <!-- Tags -->
+                <div class="mb-5">
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="text-muted me-2"><i class="fas fa-tags"></i></span>
+                        {% for tag in single_post.tags.all %}
+                        <a href="#" class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-2">
+                            {{ tag.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <section class="comments-section border-top pt-4">
+                    <h4 class="h5 mb-4">
+                        <i class="far fa-comments me-2"></i>
+                        Comments ({{ comment_count }})
+                    </h4>
+
+                    <!-- Comments List -->
+                    {% if comments %}
+                    <div class="comments-list mb-5">
+                        {% for comment in comments %}
+                        <div class="card border-0 shadow-sm mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="h6 mb-0">{{ comment.user.username }}</h5>
+                                        <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                                    </div>
+                                </div>
+                                <p class="card-text mb-0">{{ comment.comment }}</p>
                             </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-light text-center py-4 mb-5">
+                        <i class="far fa-comment-dots fa-2x mb-3 text-muted"></i>
+                        <p class="mb-0">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Comment Form -->
+                    <div class="comment-form">
+                        <h5 class="h6 mb-3">Leave a comment</h5>
+                        {% if user.is_authenticated %}
+                        <form method="POST" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <textarea name="comment" class="form-control" 
+                                          placeholder="Write your comment here..." 
+                                          rows="4" required></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter your comment.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                Post Comment
+                            </button>
                         </form>
                         {% else %}
-                        <p>Please <span><a href="{% url 'login' %}">Login</a></span> to write comment!</p>
-                        {% endif %}
-                     </div>
-                    </section>
-            </article>
-        </div>
-        
-        <!-- Side widgets-->
-        <div class="col-lg-4">
-            <!-- Categories widget-->
-            <div class="card mb-4 p-3">
-                <h4 class="font-bold">You may also like</h4>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <ul class="list-unstyled mb-0">
-                                {% for cat in categories %}
-                                <li><a href="{% url 'posts_by_category' cat.id %}">{{ cat.category_name }}</a></li>
-                                {% endfor %}
-                            </ul>
+                        <div class="alert alert-warning">
+                            Please <a href="{% url 'login' %}?next={{ request.path }}" class="alert-link">login</a> 
+                            to post a comment.
                         </div>
+                        {% endif %}
+                    </div>
+                </section>
+            </article>
+        </main>
 
+        <!-- Sidebar -->
+        <aside class="col-lg-4">
+            <!-- Categories -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="h5 mb-3">
+                        <i class="fas fa-folder-open me-2"></i>
+                        Explore Categories
+                    </h4>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for cat in categories %}
+                        <a href="{% url 'posts_by_category' cat.id %}" 
+                           class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-2">
+                            {{ cat.category_name }}
+                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-            <!-- Side widget-->
-            <div class="card mb-4 p-3">
-                <h4 class="text-dark"><i class="fa fa-user"></i> Follow us</h4>
-                <ol class="list-unstyled">
-                    <li><a href="#"><i class="fab fa-twitter"></i> @cherryblogs</a></li>
-                    <li><a href="#"><i class="fab fa-youtube"></i> @cherryyoutube</a></li>
-                </ol>
+
+            <!-- Newsletter Widget -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body bg-light rounded-3">
+                    <h4 class="h5 mb-3">Stay Updated</h4>
+                    <p class="small text-muted mb-3">
+                        Get the latest {{ category }} articles delivered to your inbox
+                    </p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control form-control-sm" placeholder="Your email">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </aside>
     </div>
 </div>
-
 {% endblock %}

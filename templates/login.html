@@ -1,17 +1,108 @@
-{% extends './base/base.html' %}
+{% extends './base/base.html' %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-lg-5">
+          <h3 class="text-center mb-4 fw-bold text-uppercase text-danger">
+            Login
+          </h3>
 
+          {% load crispy_forms_tags %}
+          <form action="{% url 'login' %}" method="POST" novalidate>
+            {% csrf_token %}
 
-{% block content %}
-<h3 class="text-center">Login</h3>
-<hr/>
+            <div class="form-group mb-4 position-relative">
+              <i
+                class="fas fa-user position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="text"
+                name="username"
+                id="id_username"
+                class="form-control rounded-pill ps-5"
+                placeholder="Username or Email"
+                required
+                autofocus
+                autocomplete="username"
+              />
+            </div>
 
-{% load crispy_forms_tags %}
-<form action="{% url 'login' %}" method="POST", style="width:400px; margin: auto;" class="text-center">
-    {% csrf_token %} 
+            <div class="form-group mb-3 position-relative">
+              <i
+                class="fas fa-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              ></i>
+              <input
+                type="password"
+                name="password"
+                id="id_password"
+                class="form-control rounded-pill ps-5"
+                placeholder="Password"
+                required
+                autocomplete="current-password"
+              />
+            </div>
 
-    {{ form | crispy}}
-    <input type="submit" value="login" class="btn btn-dark">
-</form>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="rememberMe"
+                />
+                <label class="form-check-label small" for="rememberMe">
+                  Remember me
+                </label>
+              </div>
+              <a href="#" class="small text-muted">Forgot password?</a>
+            </div>
 
+            <div class="text-center mb-4">
+              <button
+                type="submit"
+                class="btn btn-danger rounded-pill px-5 fw-bold"
+              >
+                LOGIN
+              </button>
+            </div>
 
+            <div class="position-relative text-center my-4">
+              <hr class="text-muted" />
+              <span
+                class="px-3 bg-white position-absolute small text-muted"
+                style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+              >
+                OR
+              </span>
+            </div>
+
+            <div class="text-center mb-3">
+              <p class="small mb-0">
+                Don't have an account?
+                <a href="{% url 'register' %}" class="text-danger fw-semibold"
+                  >Register</a
+                >
+              </p>
+            </div>
+
+            <div
+              class="card-footer bg-transparent px-0 text-center border-0 mt-3"
+            >
+              <p class="small text-muted mb-0">
+                By logging in, you agree to our
+                <a href="#" class="text-danger text-decoration-none">Terms</a>,
+                <a href="#" class="text-danger text-decoration-none"
+                  >Privacy Policy</a
+                >, and
+                <a href="#" class="text-danger text-decoration-none"
+                  >Cookie Policy</a
+                >.
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

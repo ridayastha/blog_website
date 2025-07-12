@@ -1,6 +1,6 @@
 /* stylelint-disable selector-list-comma-newline-after */
 *{
-  /* font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif; */
+  font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif;
   /* font-family: 'Oswald', sans-serif; */
 }
 
@@ -20,7 +20,7 @@ a:hover{
 
 /* for font logo */
 .blog-header-logo {
-  font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  /* font-family: 'Merienda', 'Playfair Display', Georgia, 'Times New Roman', serif; */
   font-size: 1rem;
 }
 
