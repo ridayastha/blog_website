@@ -1,5 +1,116 @@
-<!-- <footer class="blog-footer">
-    <p>Django blog built with   by <a href="#">Hridaya Shrestha</a></p>
+{% load static %}
+<footer class="bg-dark text-light pt-5 pb-4">
+    <div class="container">
+        <div class="row g-5">
+            <!-- About -->
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="logo-container bg-light-subtle p-2 rounded-circle me-2">
+                        <img src="{% static 'images/logo2.png' %}" alt="RidayaWriteBlogs Logo" height="32">
+                    </div>
+                    <span class="fs-5 fw-semibold">RidayaWriteBlogs</span>
+                </div>
+                <p class="text-secondary mb-4">
+                    Share ideas, stories, and insights with tech enthusiasts and innovators. Join our growing community.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3">Quick Links</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+                    <li><a href="#" class="footer-link">About Us</a></li>
+                    <li><a href="#" class="footer-link">Blog Posts</a></li>
+                    <li><a href="#" class="footer-link">Categories</a></li>
+                    <li><a href="#" class="footer-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3">Categories</h6>
+                <div class="row">
+                    {% for cat in categories|slice:":6" %}
+                    <div class="col-6 mb-2">
+                        <a href="{% url 'posts_by_category' cat.id %}" class="footer-link small">{{ cat.category_name }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3">Newsletter</h6>
+                <p class="text-secondary small">Get updates and insights in your inbox.</p>
+                <form class="d-flex mb-2" method="post" action="#">
+                    {% csrf_token %}
+                    <input type="email" class="form-control form-control-sm me-2" placeholder="Your email" required>
+                    <button class="btn btn-primary btn-sm" type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <p class="text-secondary small">No spam. Unsubscribe anytime.</p>
+            </div>
+        </div>
+
+        <hr class="mt-5 mb-3 border-secondary-subtle">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <p class="small text-secondary mb-2 mb-md-0">&copy; {% now "Y" %} RidayaWriteBlogs. All rights reserved.</p>
+            <div>
+                <a href="#" class="footer-link small me-3">Terms</a>
+                <a href="#" class="footer-link small me-3">Privacy</a>
+                <a href="#" class="footer-link small">Cookies</a>
+            </div>
+        </div>
+    </div>
 </footer>
-</body>
-</html> -->
+
+<style>
+    footer {
+        font-size: 15px;
+        background-color: #111;
+    }
+
+    .footer-link {
+        color: #bbb;
+        text-decoration: none;
+        display: inline-block;
+        padding: 3px 0;
+        transition: color 0.2s ease;
+    }
+
+    .footer-link:hover {
+        color: #fff;
+    }
+
+    .social-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #222;
+        color: #fff;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-icon:hover {
+        background-color: #0d6efd;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    footer hr {
+        opacity: 0.15;
+    }
+</style>

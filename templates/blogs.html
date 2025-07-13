@@ -76,7 +76,7 @@
                     <div class="comments-list mb-5">
                         {% for comment in comments %}
                         <div class="card border-0 shadow-sm mb-3">
-                            <div class="card-body">
+                            <div class="card-body bg-light">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
                                         <i class="fas fa-user"></i>
@@ -129,8 +129,32 @@
 
         <!-- Sidebar -->
         <aside class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4 bg-light">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Search Articles</h3>
+            <form action="{% url 'search' %}" method="get">
+              <div class="input-group">
+                <input
+                  type="search"
+                  name="keyword"
+                  class="form-control rounded-start-pill"
+                  placeholder="Search by title or keyword..."
+                  aria-label="Search"
+                  value="{{ request.GET.keyword|default:'' }}"
+                />
+                <button
+                  class="btn btn-primary rounded-end-pill"
+                  type="submit"
+                  aria-label="Submit Search"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
             <!-- Categories -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4 bg-light">
                 <div class="card-body">
                     <h4 class="h5 mb-3">
                         <i class="fas fa-folder-open me-2"></i>
@@ -150,7 +174,7 @@
             <!-- Newsletter Widget -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body bg-light rounded-3">
-                    <h4 class="h5 mb-3">Stay Updated</h4>
+                    <h4 class="h5 mb-3">Newsletter</h4>
                     <p class="small text-muted mb-3">
                         Get the latest {{ category }} articles delivered to your inbox
                     </p>
@@ -164,6 +188,46 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Social Links -->
+        <div class="card border-0 bg-light shadow-sm mt-4">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Social Media</h3>
+            <p class="small text-muted mb-3">
+                        We are available on:
+                    </p>
+            <div class="d-flex justify-content-center">
+              <a
+                href="#"
+                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a
+                href="#"
+                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i class="fab fa-github"></i>
+              </a>
+              <a
+                href="#"
+                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a
+                href="#"
+                class="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px"
+              >
+                <i class="fab fa-youtube"></i>
+              </a>
+            </div>
+          </div>
+        </div>
         </aside>
     </div>
 </div>

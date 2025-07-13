@@ -9,7 +9,7 @@
             <small class="text-muted">{{ posts|length }} articles found</small>
         </div>
         <a href="{% url 'home' %}" class="btn btn-sm btn-outline-primary rounded-pill">
-            <i class="fas fa-arrow-left me-1"></i>Home
+            <i class="fas fa-arrow-left me-1"></i> Back to home
         </a>
     </div>
 
@@ -82,8 +82,35 @@
         
         <!-- Sidebar -->
         <aside class="col-lg-4">
+
+            <!-- Search -->
+        <div class="card border-0 shadow-sm mb-4 bg-light">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Search Articles</h3>
+            <form action="{% url 'search' %}" method="get">
+              <div class="input-group">
+                <input
+                  type="search"
+                  name="keyword"
+                  class="form-control rounded-start-pill"
+                  placeholder="Search by title or keyword..."
+                  aria-label="Search"
+                  value="{{ request.GET.keyword|default:'' }}"
+                />
+                <button
+                  class="btn btn-primary rounded-end-pill"
+                  type="submit"
+                  aria-label="Submit Search"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
             <!-- Categories Widget -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4 bg-light">
                 <div class="card-body">
                     <h4 class="h5 mb-3">Explore Categories</h4>
                     <div class="d-flex flex-wrap gap-2">
@@ -96,11 +123,11 @@
                     </div>
                 </div>
             </div>
-            
+        
             <!-- Popular Posts Widget -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4 bg-light">
                 <div class="card-body">
-                    <h4 class="h5 mb-3">Most Relevant in {{ category }}</h4>
+                    <h4 class="h5 mb-3">Most Relevant For {{ category }}</h4>
                     {% for post in posts|slice:":3" %}
                     <div class="mb-3 pb-3 border-bottom">
                         <a href="{% url 'blogs' post.slug %}" class="text-decoration-none text-dark">
@@ -115,7 +142,7 @@
             <!-- Newsletter Widget -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body bg-light rounded-3">
-                    <h4 class="h5 mb-3">Stay Updated</h4>
+                    <h4 class="h5 mb-3">Newsletter</h4>
                     <p class="small text-muted mb-3">
                         Get the latest {{ category }} articles delivered to your inbox
                     </p>

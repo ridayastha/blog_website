@@ -1,169 +1,234 @@
 <!-- Home.html -->
-{% extends 'base/base.html' %}
-{% load static %}
-
-{% block content %}
+{% extends 'base/base.html' %} {% load static %} {% block content %}
 <div class="container py-4">
-    <!-- Featured Hero Post -->
-    {% for post in featured_post %}
-    {% if forloop.first %}
-    <div class="hero-banner mb-5 rounded-3 overflow-hidden" style="background-image: url('{{ post.blog_image.url }}'); height: 400px; background-size: cover; background-position: center;">
-            <div class="hero-overlay d-flex align-items-end p-4 p-md-5" style="background: rgba(0,0,0,0.5); height: 100%;">
-                <div class="text-white w-100">
-                    <div class="badge bg-primary bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill d-inline-block">
-                        Featured Post
-                    </div>
-                    <h1 class="display-5 fw-bold">
-                        <a href="{% url 'blogs' post.slug %}" class="text-white text-decoration-none">{{ post.title }}</a>
-                    </h1>
-                    <p class="lead mb-4">{{ post.short_description|truncatewords:25 }}</p>
-                    <a href="{% url 'blogs' post.slug %}" class="btn btn-primary btn-lg rounded-pill px-4">
-                        Read More <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-    {% endfor %}
+    
+  {% for post in featured_post %}
+  {% if forloop.first %}
+    <div class="mb-5 rounded-3 overflow-hidden position-relative" style="min-height: 300px;">
+      <!-- Background Image -->
+      <div class="position-absolute top-0 start-0 w-100 h-100" style="
+        background-image: url('{{ post.blog_image.url }}');
+        background-size: cover;
+        background-position: center;
+        z-index: 1;
+      "></div>
 
-    <!-- Featured Posts Section -->
-    <section class="mb-5">
+      <!-- Overlay and Content -->
+      <div class="position-relative z-2 h-100 d-flex align-items-end p-4 p-md-5" style="background: rgba(0, 0, 0, 0.5);">
+        <div class="text-white w-100">
+          <div class="badge bg-primary bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill d-inline-block">
+            Featured Post
+          </div>
+
+          <h1 class="display-5 fw-bold">
+            <a href="{% url 'blogs' post.slug %}" class="text-white text-decoration-none">
+              {{ post.title }}
+            </a>
+          </h1>
+          <p class="lead mb-4">{{ post.short_description|truncatewords:25 }}</p>
+          <a href="{% url 'blogs' post.slug %}" class="btn btn-primary btn-lg rounded-pill px-4">
+            Read More <i class="fas fa-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+
+
+  <!-- Featured Posts Section -->
+  <section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="section-title m-0">Featured Posts</h2>
+      <a href="#" class="text-decoration-none">View All</a>
+    </div>
+    <div class="row g-4">
+      {% for post in featured_post %} {% if not forloop.first %}
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm card-hover h-100">
+          {% if post.blog_image %}
+          <img
+            src="{{ post.blog_image.url }}"
+            class="card-img-top"
+            style="height: 200px; object-fit: cover"
+            alt="{{ post.title }}"
+          />
+          {% endif %}
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div
+                class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2"
+              >
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <small class="text-muted">{{ post.author }}</small>
+                <small class="text-muted d-block"
+                  >{{ post.created_at|timesince }} ago</small
+                >
+              </div>
+            </div>
+            <h3 class="h5 mb-3">
+              <a
+                href="{% url 'blogs' post.slug %}"
+                class="text-decoration-none text-dark"
+                >{{ post.title }}</a
+              >
+            </h3>
+            <p class="card-text mb-4">
+              {{ post.short_description | truncatewords:20 }}
+            </p>
+            <a
+              href="{% url 'blogs' post.slug %}"
+              class="btn btn-sm btn-outline-primary rounded-pill align-self-start"
+            >
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </section>
+
+  <!-- Recent Articles Section -->
+  <section class="mb-5">
+    <div class="row">
+      <div class="col-lg-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title m-0">Featured Posts</h2>
-            <a href="#" class="text-decoration-none">View All</a>
+          <h2 class="section-title m-0">Recent Articles</h2>
+          <a href="#" class="text-decoration-none">View All</a>
         </div>
         <div class="row g-4">
-            {% for post in featured_post %}
-            {% if not forloop.first %}
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm card-hover h-100">
-                    {% if post.blog_image %}
-                    <img src="{{ post.blog_image.url }}" class="card-img-top" 
-                         style="height: 200px; object-fit: cover;" 
-                         alt="{{ post.title }}">
-                    {% endif %}
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted">{{ post.author }}</small>
-                                <small class="text-muted d-block">{{ post.created_at|timesince }} ago</small>
-                            </div>
-                        </div>
-                        <h3 class="h5 mb-3">
-                            <a href="{% url 'blogs' post.slug %}" class="text-decoration-none text-dark">{{ post.title }}</a>
-                        </h3>
-                        <p class="card-text mb-4">{{ post.short_description | truncatewords:20 }}</p>
-                        <a href="{% url 'blogs' post.slug %}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
-                            Read More
-                        </a>
-                    </div>
+          {% for post in posts %}
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm card-hover h-100">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                  <div
+                    class="me-2"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: rgba(13, 110, 253, 0.1);
+                      border-radius: 50%;
+                    "
+                  >
+                    <i class="fas fa-user text-primary"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted">{{ post.author }}</small>
+                    <small class="text-muted d-block"
+                      >{{ post.created_at|timesince }} ago</small
+                    >
+                  </div>
                 </div>
+                <h3 class="h5 mb-3">
+                  <a
+                    href="{% url 'blogs' post.slug %}"
+                    class="text-decoration-none text-dark"
+                    >{{ post.title }}</a
+                  >
+                </h3>
+                <p class="card-text mb-4">
+                  {{ post.short_description | truncatewords:15 }}
+                </p>
+                <a
+                  href="{% url 'blogs' post.slug %}"
+                  class="btn btn-sm btn-outline-primary rounded-pill align-self-start"
+                >
+                  Read More
+                </a>
+              </div>
             </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <!-- Search -->
+        <div class="card border-0 shadow-sm mb-4 bg-light">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Search Articles</h3>
+            <form action="{% url 'search' %}" method="get">
+              <div class="input-group">
+                <input
+                  type="search"
+                  name="keyword"
+                  class="form-control rounded-start-pill"
+                  placeholder="Search by title or keyword..."
+                  aria-label="Search"
+                  value="{{ request.GET.keyword|default:'' }}"
+                />
+                <button
+                  class="btn btn-primary rounded-end-pill"
+                  type="submit"
+                  aria-label="Submit Search"
+                >
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Community Box -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4 bg-light bg-opacity-5 rounded-3">
+            <div class="d-flex align-items-center mb-3">
+              <h3 class="h5 mb-0">Join Our Community</h3>
+            </div>
+            <p class="mb-4">
+              Share your knowledge, ask questions, and connect with other
+              developers in our growing community.
+            </p>
+            {% if not user.is_authenticated %}
+            <a
+              href="{% url 'register' %}"
+              class="btn btn-primary w-100 rounded-pill"
+            >
+              Sign Up Now
+            </a>
+            {% else %}
+            <a href="" class="btn btn-outline-primary w-100 rounded-pill">
+              Your Profile
+            </a>
             {% endif %}
-            {% endfor %}
+          </div>
         </div>
-    </section>
 
-    <!-- Recent Articles Section -->
-    <section class="mb-5">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title m-0">Recent Articles</h2>
-                    <a href="#" class="text-decoration-none">View All</a>
-                </div>
-                <div class="row g-4">
-                    {% for post in posts %}
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm card-hover h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background-color: rgba(13, 110, 253, 0.1); border-radius: 50%;">
-    <i class="fas fa-user text-primary"></i>
-</div>
-                                    <div>
-                                        <small class="text-muted">{{ post.author }}</small>
-                                        <small class="text-muted d-block">{{ post.created_at|timesince }} ago</small>
-                                    </div>
-                                </div>
-                                <h3 class="h5 mb-3">
-                                    <a href="{% url 'blogs' post.slug %}" class="text-decoration-none text-dark">{{ post.title }}</a>
-                                </h3>
-                                <p class="card-text mb-4">{{ post.short_description | truncatewords:15 }}</p>
-                                <a href="{% url 'blogs' post.slug %}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
-                                    Read More
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+        <!-- Newsletter -->
+        <div class="card border-0 bg-light shadow-sm mb-4">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3">Newsletter</h3>
 
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- Community Box -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body p-4 bg-light bg-opacity-5 rounded-3">
-                        <div class="d-flex align-items-center mb-3">
-                            
-                            <h3 class="h5 mb-0">Join Our Community</h3>
-                        </div>
-                        <p class="mb-4">Share your knowledge, ask questions, and connect with other developers in our growing community.</p>
-                        {% if not user.is_authenticated %}
-                        <a href="{% url 'register' %}" class="btn btn-primary w-100 rounded-pill">
-                            Sign Up Now
-                        </a>
-                        {% else %}
-                        <a href="" class="btn btn-outline-primary w-100 rounded-pill">
-                            Your Profile
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Newsletter -->
-                <div class="card border-0 bg-light shadow-sm mb-4">
-                    <div class="card-body p-4">
-                        <h3 class="h5 mb-3">Newsletter</h3>
-                        
-                        <p class="small text-muted mb-3">Get the latest articles delivered to your inbox !</p>
-                        <form>
-                            <div class="mb-3">
-                                <input type="email" class="form-control" placeholder="Your email address">
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 rounded-pill">
-                                Subscribe
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Social Links -->
-                <div class="card border-0 bg-light shadow-sm">
-                    <div class="card-body p-4">
-                        <h3 class="h5 mb-3">Find us on:</h3>
-                        <div class="d-flex justify-content-center">
-                            <a href="#" class="btn btn-outline-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <p class="small text-muted mb-3">
+              Get the latest articles delivered to your inbox !
+            </p>
+            <form>
+              <div class="mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Your email address"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                Subscribe
+              </button>
+            </form>
+          </div>
         </div>
-    </section>
+
+        
+      </div>
+    </div>
+  </section>
+  
 </div>
-{% endblock  %}
+{% endblock %}
