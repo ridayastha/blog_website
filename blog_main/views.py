@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from blogs.models import Category, Blogs
 from .forms import RegistrationForm
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -18,18 +18,19 @@ def home(request):
     return render(request, 'home.html', context)
 
 def register(request):
-    if request.method=="POST":
+    if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('register')
+            messages.success(request, "Registration successful.")  # Add this line
+            return redirect('login')  # Optionally redirect to login page instead
     else:
         form = RegistrationForm()
+    
     context = {
-        'form':form
+        'form': form
     }
     return render(request, 'register.html', context)
-
 
 # Login Function
 def login(request):
@@ -42,7 +43,7 @@ def login(request):
             user = auth.authenticate(username=username, password=password)
             if user is not None:
                 auth.login(request, user)
-                return redirect('dashboard')
+                return redirect('home')
     else:
         form = AuthenticationForm()
     context = {

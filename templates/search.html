@@ -1,26 +1,165 @@
-{% extends './base/base.html' %}
+{% extends 'base/base.html' %}
 
 {% block content %}
+<div class="container py-4">
+    <!-- Search Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h6 class="h6 mb-2">Search Results for: <span class="fw-bold">"{{ keyword }}"</span></h6>
+            <small class="text-muted">{{ blogs|length }} articles found</small>
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-sm btn-outline-primary rounded-pill">
+            <i class="fas fa-arrow-left me-1"></i> Back to home
+        </a>
+    </div>
 
-<h3 class="badge bg-warning rounded-pill text-light" style="letter-spacing: 2px; font-size: 11px;">Searched keyword: "{{ keyword }}" </h3>
-  <main role="main" class="container p-0">
     <div class="row">
-      <div class="col-md-8 blog-main">
-        {% for i in blogs %}
-          <div class="card border-0" >
-            <div class="card-body">
-              <h3><a href="{% url 'blogs' i.slug %}">{{ i.title }}</a></h3>
-              <small class="mb-1 text-muted">{{ i.created_at | timesince }} ago | {{ i.author }}</small>
-              <p class="card-text">{{ i.short_description | truncatewords:20 }}</p>
+        <!-- Main Content -->
+        <main class="col-lg-8">
+            <div class="row g-4 mb-5">
+                {% for post in blogs %}
+                <div class="col-md-6">
+                    <article class="card border-0 shadow-sm h-100">
+                        <!-- Post Image -->
+                        {% if post.blog_image %}
+                        <img src="{{ post.blog_image.url }}" class="card-img-top" 
+                             style="height: 200px; object-fit: cover;" 
+                             alt="{{ post.title }}">
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <!-- Author and Date -->
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted">{{ post.author }}</small>
+                                    <small class="text-muted d-block">{{ post.created_at|timesince }} ago</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Title -->
+                            <h3 class="h5 mb-3">
+                                <a href="{% url 'blogs' post.slug %}" 
+                                   class="text-decoration-none text-dark stretched-link">
+                                    {{ post.title }}
+                                </a>
+                            </h3>
+                            
+                            <!-- Excerpt -->
+                            <p class="card-text text-muted mb-3">
+                                {{ post.short_description|truncatewords:20 }}
+                            </p>
+                            
+                            <!-- Category Badge -->
+                            <div class="mt-auto">
+                                <span class="badge bg-warning text-dark rounded-pill">
+                                    {{ post.category.category_name }}
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="card border-0 text-center py-5">
+                        <div class="card-body">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h4 class="h5">No posts found for your search</h4>
+                            <p class="text-muted">Try different keywords or browse our categories</p>
+                            <a href="{% url 'home' %}" class="btn btn-primary rounded-pill">
+                                Browse All Posts
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-          </div>
-          {% endfor %}
-      </div>
-      <!-- /.blog-main -->
-    
+            
+            <!-- Pagination would go here if needed -->
+        </main>
+        
+        <!-- Sidebar -->
+        <aside class="col-lg-4">
+            <!-- Search -->
+            <div class="card border-0 shadow-sm mb-4 bg-light">
+                <div class="card-body p-4">
+                    <h3 class="h5 mb-3">Search Again</h3>
+                    <form action="{% url 'search' %}" method="get">
+                        <div class="input-group">
+                            <input
+                                type="search"
+                                name="keyword"
+                                class="form-control rounded-start-pill"
+                                placeholder="Search by title or keyword..."
+                                aria-label="Search"
+                                value="{{ request.GET.keyword|default:'' }}"
+                            />
+                            <button
+                                class="btn btn-primary rounded-end-pill"
+                                type="submit"
+                                aria-label="Submit Search"
+                            >
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-    </div><!-- /.row -->
+            <!-- Popular Posts Widget -->
+            {% if blogs %}
+            <div class="card border-0 shadow-sm mb-4 bg-light">
+                <div class="card-body">
+                    <h4 class="h5 mb-3">Similar Posts</h4>
+                    {% for post in blogs|slice:":3" %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <a href="{% url 'blogs' post.slug %}" class="text-decoration-none text-dark">
+                            <h5 class="h6 mb-1">{{ post.title }}</h5>
+                        </a>
+                        <small class="text-muted">{{ post.created_at|timesince }} ago</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
-  </main><!-- /.container -->
-
+            <!-- Categories Widget -->
+            <div class="card border-0 shadow-sm mb-4 bg-light">
+                <div class="card-body">
+                    <h4 class="h5 mb-3">Explore Categories</h4>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for cat in categories %}
+                        <a href="{% url 'posts_by_category' cat.id %}" 
+                           class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-2">
+                            {{ cat.category_name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        
+            
+            
+            <!-- Newsletter Widget -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body bg-light rounded-3">
+                    <h4 class="h5 mb-3">Newsletter</h4>
+                    <p class="small text-muted mb-3">
+                        Get the latest articles delivered to your inbox
+                    </p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control form-control-sm" placeholder="Your email">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
 {% endblock %}
