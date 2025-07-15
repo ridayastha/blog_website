@@ -112,7 +112,7 @@
             {% if blogs %}
             <div class="card border-0 shadow-sm mb-4 bg-light">
                 <div class="card-body">
-                    <h4 class="h5 mb-3">Similar Posts</h4>
+                    <h4 class="h5 mb-3">Most Relevant</h4>
                     {% for post in blogs|slice:":3" %}
                     <div class="mb-3 pb-3 border-bottom">
                         <a href="{% url 'blogs' post.slug %}" class="text-decoration-none text-dark">

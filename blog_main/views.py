@@ -34,20 +34,22 @@ def register(request):
 
 # Login Function
 def login(request):
-    if request.method=="POST":
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+    next_url = request.GET.get('next') or request.POST.get('next') or 'home'
 
-            user = auth.authenticate(username=username, password=password)
-            if user is not None:
-                auth.login(request, user)
-                return redirect('home')
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth.login(request, user)
+            return redirect(next_url)
+        else:
+            messages.error(request, "Invalid username or password")  # Add error message here
     else:
         form = AuthenticationForm()
+
     context = {
-        'form': form
+        'form': form,
+        'next': next_url
     }
     return render(request, 'login.html', context)
 
