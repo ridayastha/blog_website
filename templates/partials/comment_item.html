@@ -1,0 +1,93 @@
+<div class="comment-item mb-3" id="comment-{{ comment.id }}">
+    <div class="card border-0 bg-light rounded-3">
+        <div class="card-body p-3 p-md-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold me-3" style="width: 32px; height: 32px; font-size: 11px;">
+                    {{ comment.user.username|slice:":1"|upper }}
+                </div>
+                <div>
+                    <h5 class="h6 mb-0 fw-bold text-dark">{{ comment.user.username }}</h5>
+                    <small class="text-muted" style="font-size: 0.75rem;">
+                        {{ comment.created_at|timesince }} ago<span class="edited-label">{% if comment.is_edited %} · edited{% endif %}</span>
+                    </small>
+                </div>
+            </div>
+
+            <p class="card-text text-secondary mb-3 small lh-base comment-text" style="white-space: pre-line;">{{ comment.comment }}</p>
+
+            <div class="d-flex align-items-center flex-wrap gap-2 reaction-box">
+                {% if user.is_authenticated %}
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary react-btn {% if comment.user_reaction == 1 %}active{% endif %}"
+                            data-action="like"
+                            data-url="{% url 'react_comment' comment.id 'like' %}">
+                        <i class="far fa-thumbs-up"></i> <span class="like-count">{{ comment.likes }}</span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary react-btn {% if comment.user_reaction == -1 %}active{% endif %}"
+                            data-action="dislike"
+                            data-url="{% url 'react_comment' comment.id 'dislike' %}">
+                        <i class="far fa-thumbs-down"></i> <span class="dislike-count">{{ comment.dislikes }}</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-link text-secondary text-decoration-none reply-toggle"
+                            data-target="reply-form-{{ comment.id }}">
+                        <i class="fas fa-reply"></i> Reply
+                    </button>
+
+                    {% if user == comment.user %}
+                    <button type="button" class="btn btn-sm btn-link text-secondary text-decoration-none edit-toggle"
+                            data-url="{% url 'edit_comment' comment.id %}">
+                        <i class="fas fa-pen fa-xs"></i> Edit
+                    </button>
+                    {% endif %}
+
+                    {% if user == comment.user or user == single_post.author or user.is_staff %}
+                    <button type="button" class="btn btn-sm btn-link text-danger text-decoration-none delete-btn"
+                            data-url="{% url 'delete_comment' comment.id %}"
+                            data-has-replies="{% if comment.child_list %}1{% endif %}">
+                        <i class="fas fa-trash fa-xs"></i> Delete
+                    </button>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path|urlencode }}%23comment-{{ comment.id }}"
+                       class="btn btn-sm btn-outline-secondary">
+                        <i class="far fa-thumbs-up"></i> {{ comment.likes }}
+                    </a>
+                    <a href="{% url 'login' %}?next={{ request.path|urlencode }}%23comment-{{ comment.id }}"
+                       class="btn btn-sm btn-outline-secondary">
+                        <i class="far fa-thumbs-down"></i> {{ comment.dislikes }}
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <form id="reply-form-{{ comment.id }}" class="d-none mt-3 comment-ajax-form reply-form" method="POST" action="{% url 'add_comment' single_post.slug %}">
+                {% csrf_token %}
+                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                <textarea name="comment" maxlength="250" rows="2" required class="form-control bg-white border border-light-subtle rounded-3 p-2 shadow-none mb-2" placeholder="Reply to {{ comment.user.username }}..." style="font-size: 0.9rem;"></textarea>
+                <small class="text-danger form-error d-none d-block mb-2"></small>
+                <button type="submit" class="btn btn-dark btn-sm rounded-3 px-3">Post Reply</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if comment.child_list %}
+    <div class="replies mt-3 {% if depth < 4 %}ms-2 ms-md-4 ps-3 border-start{% endif %}">
+        {% with next_depth=depth|add:1 %}
+            {% for child in comment.child_list %}
+                <div class="{% if forloop.counter > 2 %}extra-reply d-none{% endif %}">
+                    {% include 'partials/comment_item.html' with comment=child depth=next_depth %}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        {% if comment.child_list|length > 2 %}
+            <button type="button" class="btn btn-link btn-sm text-secondary text-decoration-none p-0 more-replies-btn">
+                <i class="fas fa-chevron-down fa-xs"></i>
+                View {{ comment.child_list|length|add:"-2" }} more {{ comment.child_list|length|add:"-2"|pluralize:"reply,replies" }}
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

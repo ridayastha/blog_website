@@ -16,7 +16,7 @@
 
 from django.contrib import admin
 from django import forms
-from .models import Category, Blogs, Comment
+from .models import Category, Blogs, Comment, CommentReaction
 from ckeditor.widgets import CKEditorWidget  # Import CKEditor widget
 
 # Custom Form to use CKEditor
@@ -39,6 +39,6 @@ class BlogAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Blogs, BlogAdmin)
-
 admin.site.register(Comment)
+admin.site.register(CommentReaction)
 

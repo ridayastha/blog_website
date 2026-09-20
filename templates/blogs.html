@@ -2,14 +2,14 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-2">
     <div class="row g-5">
         <main class="col-lg-8">
             <article class="blog-post">
                 <header class="mb-4">
                     <div class="mb-3">
                         <a href="{% url 'posts_by_category' single_post.category.id %}" 
-                           class="badge bg-warning text-dark text-decoration-none rounded-pill px-3 py-2 fw-semibold">
+                           class="badge bg-warning text-light text-decoration-none rounded px-3 py-1 fw-semibold">
                             {{ single_post.category }}
                         </a>
                     </div>
@@ -22,7 +22,7 @@
                                 {{ single_post.author|slice:":2"|upper }}
                             </div>
                             <div>
-                                <small class="text-dark fw-semibold d-block">By {{ single_post.author }}</small>
+                                <small class="text-dark fw-semibold d-block">Author: {{ single_post.author }}</small>
                                 <small class="text-muted d-block" style="font-size: 0.75rem;">{{ single_post.created_at|date:"F j, Y" }}</small>
                             </div>
                         </div>
@@ -57,63 +57,56 @@
                 </div>
 
                 <section class="comments-section border-top pt-5">
-                    <h4 class="h5 fw-bold text-dark mb-4">
-                        <i class="far fa-comments me-2 text-secondary"></i>
-                        Comments ({{ comment_count }})
-                    </h4>
+    <h4 class="h5 fw-bold text-dark mb-4">
+        <i class="far fa-comments me-2 text-secondary"></i>
+        Comments (<span id="comment-count">{{ comment_count }}</span>)
+    </h4>
 
-                    {% if comments %}
-                    <div class="comments-list mb-5">
-                        {% for comment in comments %}
-                        <div class="card border-0 bg-light rounded-3 mb-3">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold me-3" style="width: 32px; height: 32px; font-size: 11px;">
-                                        {{ comment.user.username|slice:":1"|upper }}
-                                    </div>
-                                    <div>
-                                        <h5 class="h6 mb-0 fw-bold text-dark">{{ comment.user.username }}</h5>
-                                        <small class="text-muted style" style="font-size: 0.75rem;">{{ comment.created_at|timesince }} ago</small>
-                                    </div>
-                                </div>
-                                <p class="card-text text-secondary mb-0 small lh-base">{{ comment.comment }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div class="alert bg-light border-0 text-center py-5 rounded-4 mb-5">
-                        <i class="far fa-comment-dots fa-2x mb-3 text-muted opacity-50"></i>
-                        <p class="mb-0 text-secondary small">No comments yet. Be the first to share your thoughts!</p>
-                    </div>
-                    {% endif %}
+    <div class="comments-list mb-4" id="comments-list">
+        {% for comment in comments %}
+            <div class="top-comment {% if forloop.counter > 5 %}d-none{% endif %}">
+                {% include 'partials/comment_item.html' with depth=0 %}
+            </div>
+        {% endfor %}
+    </div>
 
-                    <div class="comment-form mb-4" id="comment-form">
-                        <h5 class="fw-bold text-dark mb-3">Leave a comment</h5>
-                        {% if user.is_authenticated %}
-                        <form method="POST" class="needs-validation" novalidate>
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <textarea name="comment" class="form-control bg-light border border-light-subtle rounded-3 p-3 text-dark shadow-none" 
-                                          placeholder="Write your comment here..." 
-                                          rows="4" required style="font-size: 0.9rem;"></textarea>
-                                <div class="invalid-feedback">
-                                    Please enter your comment.
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-dark rounded-3 px-4 fw-semibold small py-2">
-                                Post Comment
-                            </button>
-                        </form>
-                        {% else %}
-                        <div class="alert border border-warning-subtle bg-warning bg-opacity-10 rounded-3 text-warning-emphasis small">
-                            Please <a href="{% url 'login' %}?next={{ request.path|urlencode }}%23comment-form" class="alert-link fw-bold">login</a>
-                            to post a comment.
-                        </div>
-                        {% endif %}
-                    </div>
+    {% if comments|length > 5 %}
+    <div class="text-center mb-5">
+        <button type="button" id="load-more-comments" class="btn btn-outline-dark btn-sm rounded-3 px-4">
+            Load more comments
+        </button>
+    </div>
+    {% endif %}
 
-                </section>
+    <div id="no-comments" class="alert bg-light border-0 text-center py-5 rounded-4 mb-5 {% if comments %}d-none{% endif %}">
+        <i class="far fa-comment-dots fa-2x mb-3 text-muted opacity-50"></i>
+        <p class="mb-0 text-secondary small">No comments yet. Be the first to share your thoughts!</p>
+    </div>
+
+    <div class="comment-form mb-4" id="comment-form">
+        <h5 class="fw-bold text-dark mb-3">Leave a comment</h5>
+        {% if user.is_authenticated %}
+        <form method="POST" id="main-comment-form" class="comment-ajax-form"
+              action="{% url 'add_comment' single_post.slug %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <textarea name="comment" maxlength="250" required
+                          class="form-control bg-light border border-light-subtle rounded-3 p-3 text-dark shadow-none"
+                          placeholder="Write your comment here..." rows="4" style="font-size: 0.9rem;"></textarea>
+                <small class="text-danger form-error d-none d-block mt-1"></small>
+            </div>
+            <button type="submit" class="btn btn-dark rounded-3 px-4 fw-semibold small py-2">
+                Post Comment
+            </button>
+        </form>
+        {% else %}
+        <div class="alert border border-warning-subtle bg-warning bg-opacity-10 rounded-3 text-warning-emphasis small">
+            Please <a href="{% url 'login' %}?next={{ request.path|urlencode }}%23comment-form" class="alert-link fw-bold">login</a>
+            to post a comment.
+        </div>
+        {% endif %}
+    </div>
+</section>
             </article>
         </main>
 
@@ -238,4 +231,303 @@
         color: #ffffff !important;
     }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const csrftoken = '{{ csrf_token }}';
+    const loginUrl = "{% url 'login' %}?next={{ request.path|urlencode }}";
+    const PAGE_SIZE = 5;
+    const loadMoreBtn = document.getElementById('load-more-comments');
+    const commentsList = document.getElementById('comments-list');
+    const noComments = document.getElementById('no-comments');
+    const counter = document.getElementById('comment-count');
+
+    // ================= HELPERS =================
+    async function postTo(url, formData = null) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrftoken, 'X-Requested-With': 'XMLHttpRequest'},  // CHANGED: header added
+            body: formData,
+        });
+    }
+
+    // NEW: update "Comments (N)" and show/hide the "No comments yet" box
+    function setCount(n) {
+        n = Math.max(n, 0);
+        counter.textContent = n;
+        noComments.classList.toggle('d-none', n > 0);
+    }
+
+    // NEW: put a freshly created comment/reply into the page
+    function insertComment(data) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = data.html.trim();
+
+        if (!data.parent_id) {
+            // top-level comment -> top of the list
+            wrapper.className = 'top-comment';
+            commentsList.prepend(wrapper);
+        } else {
+            // reply -> inside the parent's replies box (create it if this is the first reply)
+            const parentItem = document.getElementById('comment-' + data.parent_id);
+            if (!parentItem) { location.reload(); return; }
+
+            let box = parentItem.querySelector(':scope > .replies');
+            if (!box) {
+                box = document.createElement('div');
+                box.className = 'replies mt-3' + (data.depth - 1 < 4 ? ' ms-2 ms-md-4 ps-3 border-start' : '');
+                parentItem.appendChild(box);
+            }
+            const moreBtn = box.querySelector(':scope > .more-replies-btn');
+            if (moreBtn) box.insertBefore(wrapper, moreBtn); else box.appendChild(wrapper);
+
+            // parent now has replies, so its delete confirm should mention them
+            const parentDel = parentItem.querySelector(':scope > .card .delete-btn');
+            if (parentDel) parentDel.dataset.hasReplies = '1';
+        }
+
+        const newEl = wrapper.querySelector('.comment-item');
+        newEl.classList.add('comment-flash');
+        newEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
+
+    // ================= NEW: POST COMMENT / REPLY WITHOUT RELOAD =================
+    document.addEventListener('submit', async (e) => {
+        const form = e.target.closest('.comment-ajax-form');
+        if (!form) return;
+        e.preventDefault();
+
+        const textarea = form.querySelector('textarea');
+        const errEl = form.querySelector('.form-error');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const showError = (msg) => { errEl.textContent = msg; errEl.classList.remove('d-none'); };
+
+        errEl.classList.add('d-none');
+        if (!textarea.value.trim()) { showError('Please enter your comment.'); return; }
+
+        submitBtn.disabled = true;
+        try {
+            const res = await postTo(form.getAttribute('action'), new FormData(form));
+            if (res.status === 401) { window.location.href = loginUrl; return; }
+            if (!res.ok) throw new Error('failed');
+
+            const data = await res.json();
+            insertComment(data);
+            setCount(data.count);
+            textarea.value = '';
+            if (form.classList.contains('reply-form')) form.classList.add('d-none');
+        } catch (err) {
+            showError('Could not post your comment. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    // ================= ALL CLICK ACTIONS (one delegated listener) =================
+    document.addEventListener('click', async (e) => {
+
+        // ---------- like / dislike ----------
+        const reactBtn = e.target.closest('.react-btn');
+        if (reactBtn) {
+            const res = await postTo(reactBtn.dataset.url);
+            if (res.status === 401) { window.location.href = loginUrl; return; }
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const box = reactBtn.closest('.reaction-box');
+            box.querySelector('.like-count').textContent = data.likes;
+            box.querySelector('.dislike-count').textContent = data.dislikes;
+            box.querySelector('[data-action="like"]').classList.toggle('active', data.user_reaction === 1);
+            box.querySelector('[data-action="dislike"]').classList.toggle('active', data.user_reaction === -1);
+            return;
+        }
+
+        // ---------- show / hide reply form ----------
+        const replyToggle = e.target.closest('.reply-toggle');
+        if (replyToggle) {
+            const form = document.getElementById(replyToggle.dataset.target);
+            form.classList.toggle('d-none');
+            if (!form.classList.contains('d-none')) form.querySelector('textarea').focus();
+            return;
+        }
+
+        // ---------- view more replies ----------
+        const moreReplies = e.target.closest('.more-replies-btn');
+        if (moreReplies) {
+            moreReplies.closest('.replies')
+                .querySelectorAll(':scope > .extra-reply')
+                .forEach(el => el.classList.remove('d-none'));
+            moreReplies.remove();
+            return;
+        }
+
+        // ---------- open inline editor ----------
+        const editBtn = e.target.closest('.edit-toggle');
+        if (editBtn) {
+            const body = editBtn.closest('.card-body');
+            if (body.querySelector('.edit-box')) return;
+
+            const textEl = body.querySelector('.comment-text');
+            const box = document.createElement('div');
+            box.className = 'edit-box mb-3';
+            box.dataset.url = editBtn.dataset.url;
+            box.innerHTML = `
+                <textarea maxlength="250" rows="3"
+                          class="form-control bg-white border border-light-subtle rounded-3 p-2 shadow-none"
+                          style="font-size: 0.9rem;"></textarea>
+                <small class="text-danger edit-error d-none"></small>
+                <div class="mt-2 d-flex gap-2">
+                    <button type="button" class="btn btn-dark btn-sm rounded-3 px-3 save-edit">Save</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-3 px-3 cancel-edit">Cancel</button>
+                </div>`;
+            const textarea = box.querySelector('textarea');
+            textarea.value = textEl.textContent;
+
+            textEl.classList.add('d-none');
+            textEl.after(box);
+            textarea.focus();
+            return;
+        }
+
+        // ---------- cancel editing ----------
+        const cancelBtn = e.target.closest('.cancel-edit');
+        if (cancelBtn) {
+            const body = cancelBtn.closest('.card-body');
+            body.querySelector('.edit-box').remove();
+            body.querySelector('.comment-text').classList.remove('d-none');
+            return;
+        }
+
+        // ---------- save edit ----------
+        const saveBtn = e.target.closest('.save-edit');
+        if (saveBtn) {
+            const body = saveBtn.closest('.card-body');
+            const box = body.querySelector('.edit-box');
+            const textEl = body.querySelector('.comment-text');
+            const errEl = box.querySelector('.edit-error');
+            const text = box.querySelector('textarea').value.trim();
+
+            if (!text) {
+                errEl.textContent = 'Comment cannot be empty.';
+                errEl.classList.remove('d-none');
+                return;
+            }
+
+            saveBtn.disabled = true;
+            const fd = new FormData();
+            fd.append('comment', text);
+
+            try {
+                const res = await postTo(box.dataset.url, fd);
+                if (res.status === 401) { window.location.href = loginUrl; return; }
+                if (!res.ok) throw new Error('failed');
+
+                const data = await res.json();
+                textEl.textContent = data.comment;
+                body.querySelector('.edited-label').textContent = data.is_edited ? ' · edited' : '';
+                box.remove();
+                textEl.classList.remove('d-none');
+            } catch (err) {
+                errEl.textContent = 'Could not save your changes. Please try again.';
+                errEl.classList.remove('d-none');
+                saveBtn.disabled = false;
+            }
+            return;
+        }
+
+        // ---------- delete comment ----------  (CHANGED: no page reload any more)
+        const delBtn = e.target.closest('.delete-btn');
+        if (delBtn) {
+            const msg = delBtn.dataset.hasReplies
+                ? 'Delete this comment and all its replies? This cannot be undone.'
+                : 'Delete this comment? This cannot be undone.';
+            if (!confirm(msg)) return;
+
+            try {
+                const res = await postTo(delBtn.dataset.url);
+                if (res.status === 401) { window.location.href = loginUrl; return; }
+                if (!res.ok) throw new Error('failed');
+
+                const data = await res.json();
+                const wrapper = delBtn.closest('.comment-item').parentElement;
+                const container = wrapper.parentElement;
+                wrapper.remove();
+
+                // if that was the last reply in its box, remove the empty box too
+                if (container.classList.contains('replies') && !container.querySelector(':scope > div')) {
+                    container.remove();
+                }
+                setCount(parseInt(counter.textContent, 10) - data.deleted);
+            } catch (err) {
+                alert('Could not delete the comment. Please try again.');
+            }
+            return;
+        }
+    });
+
+    // ================= LOAD MORE TOP-LEVEL COMMENTS =================
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            const hidden = document.querySelectorAll('.top-comment.d-none');
+            hidden.forEach((el, i) => { if (i < PAGE_SIZE) el.classList.remove('d-none'); });
+            if (document.querySelectorAll('.top-comment.d-none').length === 0) loadMoreBtn.remove();
+        });
+    }
+
+    // ================= REVEAL COMMENT FROM URL HASH =================
+    (function revealHashTarget() {
+        if (!location.hash.startsWith('#comment-')) return;
+        const target = document.querySelector(location.hash);
+        if (!target) return;
+
+        let el = target;
+        while (el) {
+            if (el.classList && (el.classList.contains('extra-reply') || el.classList.contains('top-comment'))) {
+                el.classList.remove('d-none');
+            }
+            el = el.parentElement;
+        }
+        document.querySelectorAll('.more-replies-btn').forEach(b => {
+            const box = b.closest('.replies');
+            if (!box.querySelector(':scope > .extra-reply.d-none')) b.remove();
+        });
+        if (!document.querySelector('.top-comment.d-none') && loadMoreBtn) loadMoreBtn.remove();
+
+        target.scrollIntoView({block: 'center'});
+    })();
+
+    // ================= SHARE: NATIVE SHARE SHEET =================
+    const nativeBtn = document.getElementById('native-share-btn');
+    if (nativeBtn && navigator.share) {
+        nativeBtn.classList.remove('d-none');
+        nativeBtn.addEventListener('click', async () => {
+            try {
+                await navigator.share({title: nativeBtn.dataset.title, url: nativeBtn.dataset.url});
+            } catch (err) { /* user cancelled */ }
+        });
+    }
+
+    // ================= SHARE: COPY LINK =================
+    const copyBtn = document.getElementById('copy-link-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+            const url = copyBtn.dataset.url;
+            const label = document.getElementById('copy-link-text');
+            try {
+                await navigator.clipboard.writeText(url);
+            } catch (err) {
+                const tmp = document.createElement('input');
+                tmp.value = url;
+                document.body.appendChild(tmp);
+                tmp.select();
+                document.execCommand('copy');
+                tmp.remove();
+            }
+            label.textContent = 'Copied!';
+            setTimeout(() => label.textContent = 'Copy link', 2000);
+        });
+    }
+
+});
+</script>
 {% endblock %}

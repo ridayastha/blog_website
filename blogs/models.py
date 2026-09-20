@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField  # Import CKEditor
+import math
+from django.utils.html import strip_tags
 
 # Create your models here.
 
@@ -40,15 +42,43 @@ class Blogs(models.Model):
     def __str__(self):
         return self.title
     
+    @property
+    def read_time(self):
+        text = strip_tags(self.blog_body)
+        word_count = len(text.split())
+        return max(1, math.ceil(word_count / 200))  # 200 words per minute
+    
     
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     blog = models.ForeignKey(Blogs, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True,
+        on_delete=models.CASCADE, related_name='replies'
+    )
     comment = models.TextField(max_length=250)
+    is_edited = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.comment
 
+class CommentReaction(models.Model):
+    LIKE = 1
+    DISLIKE = -1
+    VALUE_CHOICES = ((LIKE, 'Like'), (DISLIKE, 'Dislike'))
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='reactions')
+    value = models.SmallIntegerField(choices=VALUE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'comment'], name='one_reaction_per_user_per_comment')
+        ]
+
+    def __str__(self):
+        return f"{self.user} -> {self.comment_id}: {self.value}"
     
