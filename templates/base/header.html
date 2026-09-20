@@ -1,248 +1,118 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hridaya's Dimension | Share Your Knowledge</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4e73df;
-            --primary-light: #e8f0fe;
-            --primary-dark: #3a5bc7;
-            --dark: #2c3e50;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --light-gray: #f1f3f5;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        .navbar-custom {
-            background: white;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-        .logo-container {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            /* background-color: var(--primary-light); */
-            border-radius: 50%;
-            padding: 8px;
-        }
-        .logo-container:hover {
-            transform: scale(1.1);
-            opacity: 0.9;
-        }
-        .brand-name {
-            font-weight: 700;
-            color: var(--dark);
-            transition: color 0.3s ease;
-            margin-left: 8px;
-        }
-        .brand-name:hover {
-            color: var(--primary);
-        }
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .search-input {
-            border-radius: 25px 0 0 25px;
-            padding-left: 20px;
-            border-right: none;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
-            border-color: var(--primary);
-        }
-        .search-btn {
-            border-radius: 0 25px 25px 0;
-            background-color: var(--primary);
-            border-color: var(--primary);
-            transition: all 0.3s ease;
-        }
-        .search-btn:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-        }
-        .nav-pill {
-            border-radius: 20px;
-            padding: 8px 16px;
-            margin: 0 4px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            white-space: nowrap;
-            color: var(--dark);
-        }
-        .nav-pill:hover, .nav-pill:focus {
-            background-color: var(--primary-light);
-            color: var(--primary);
-        }
-        .nav-pill.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        .auth-btn {
-            padding: 6px 18px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-radius: 25px;
-        }
-        .btn-outline-primary {
-            border-width: 2px;
-        }
-        /* Desktop categories */
-        .desktop-categories {
-            display: flex;
-            justify-content: center;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            padding: 8px 0;
-            width: 100%;
-        }
-        .desktop-categories::-webkit-scrollbar {
-            display: none;
-        }
-        /* Mobile categories */
-        .mobile-categories {
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            padding: 12px 15px;
-            margin: 0 -15px;
-            width: calc(100% + 30px);
-        }
-        .mobile-categories::-webkit-scrollbar {
-            display: none;
-        }
-        .mobile-categories-container {
-            overflow: hidden;
-            position: relative;
-            background-color: var(--light-gray);
-        }
-        .mobile-categories-container::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 30px;
-            background: linear-gradient(to right, transparent, var(--light-gray));
-            pointer-events: none;
-        }
-        @media (max-width: 992px) {
-            .search-container {
-                order: 3;
-                width: 100%;
-                margin: 10px 0;
-            }
-            .auth-buttons {
-                margin-left: auto;
-            }
-            .desktop-categories {
-                display: none;
-            }
-            .navbar-brand {
-                margin-right: 0;
-            }
-        }
-        @media (min-width: 993px) {
-            .mobile-categories-container {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-custom py-2 sticky-top">
-        <div class="container">
-            <!-- Logo/Brand -->
-            <a class="navbar-brand d-flex align-items-center me-lg-3" href="/">
-                <div class="logo-container me-2">
-                    <img src="{% static 'images/mymainbloglogo.png' %}" alt="Logo" height="55">
-                </div>
-                <span class="brand-name">ऋदय </span>
-            </a>
 
-            <!-- Categories Navigation - Visible on desktop -->
-            <div class="d-none d-lg-flex flex-grow-1">
-                <div class="desktop-categories">
-                    {% for cat in categories %}
-                    <a href="{% url 'posts_by_category' cat.id %}" 
-                       class="nav-link nav-pill {% if current_category == cat.id %}active{% endif %}">
-                        {{ cat.category_name }}
-                    </a>
-                    {% endfor %}
-                </div>
+ <!-- Main Core Header Wrapper -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2">
+    <div class="container-fluid">
+        
+        <!-- Brand Core Space -->
+        <a class="navbar-brand d-flex align-items-center me-xl-4" href="/">
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center p-2 me-2" style="width: 45px; height: 45px;">
+                <img src="{% static 'images/mymainbloglogo.png' %}" alt="Logo" height="35" class="object-fit-contain">
             </div>
+            <span class="fw-bold text-dark fs-4 tracking-tight">ऋदय</span>
+        </a>
+
+        <!-- Mobile Viewport Navigation Toggle Triggers (Hamburger) -->
+        <button class="navbar-toggler border-0 shadow-none p-2 ms-auto me-2" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbarMainLayout" aria-controls="appNavbarMainLayout" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon" style="width: 22px; height: 22px;"></span>
+        </button>
+
+        <!-- Collapsible Content Navigation Segment Layer -->
+        <div class="collapse navbar-collapse order-3 order-lg-2" id="appNavbarMainLayout">
+            <!-- Navigation Links: Aligned to start (me-auto) -->
+            <ul class="navbar-nav me-auto mb-3 mb-lg-0 gap-1 align-items-lg-center">
+                
+                <!-- 1. Home Route Anchor Point -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded fw-medium tracking-wide {% if request.path == '/' %}bg-light text-primary fw-semibold{% else %}text-secondary link-primary{% endif %}" href="/">
+                        <i class="fas fa-home d-lg-none me-2"></i>Home
+                    </a>
+                </li>
+
+                <!-- 2. Categories Dropdown Array Element -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-3 py-2 rounded fw-medium tracking-wide text-secondary link-primary d-flex align-items-center justify-content-between" href="#" id="categoriesDropdownMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span><i class="fas fa-tags d-lg-none me-2"></i>Categories</span>
+                    </a>
+                    <ul class="dropdown-menu border-0 shadow-lg p-2 rounded-3 mt-lg-2 animate fade-in" aria-labelledby="categoriesDropdownMenu" style="min-width: 220px;">
+                        <li>
+                            <small class="text-uppercase text-muted fw-bold px-3 py-1 d-block mb-1" style="font-size: 10px; letter-spacing: 1px;">Discover Topics</small>
+                        </li>
+                        {% for cat in categories %}
+                        <li>
+                            <a class="dropdown-item rounded-2 py-2 small fw-medium {% if current_category == cat.id %}bg-primary text-white{% else %}text-secondary{% endif %}" href="{% url 'posts_by_category' cat.id %}">
+                                <i class="fas fa-circle-notch fa-xs me-2 text-opacity-50 text-primary"></i>{{ cat.category_name }}
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li><span class="dropdown-item text-muted small py-2">No categories configured</span></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <!-- 3. Projects Showcase Directory Link -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded fw-medium tracking-wide {% if 'projects' in request.path %}bg-light text-primary fw-semibold{% else %}text-secondary link-primary{% endif %}" href="#">
+                        <i class="fas fa-code-branch d-lg-none me-2"></i>Projects
+                    </a>
+                </li>
+
+                <!-- 4. Courses Link -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded fw-medium tracking-wide position-relative {% if 'courses' in request.path %}bg-light text-primary fw-semibold{% else %}text-secondary link-primary{% endif %}" href="#">
+                        <i class="fas fa-graduation-cap d-lg-none me-2"></i>Courses
+                    </a>
+                </li>
+
+                <!-- 5. Portfolio Link -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded fw-medium tracking-wide position-relative {% if 'portfolio' in request.path %}bg-light text-primary fw-semibold{% else %}text-secondary link-primary{% endif %}" href="https://ridayastha.github.io/ridayashrestha-portfolio/">
+                        <i class="fas fa-briefcase d-lg-none me-2"></i>Portfolio
+                    </a>
+                </li>
+
+                <!-- 6. Services Link -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded fw-medium tracking-wide position-relative {% if 'services' in request.path %}bg-light text-primary fw-semibold{% else %}text-secondary link-primary{% endif %}" href="https://ridayastha.github.io/ridayashrestha-portfolio/">
+                        <i class="fas fa-concierge-bell d-lg-none me-2"></i>Services
+                    </a>
+                </li>
+            </ul>
+
             
-
-            <!-- Auth Buttons -->
-            <div class="d-flex auth-buttons">
-                {% if not user.is_authenticated %}
-                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary auth-btn me-2">
-                        Sign In
-                    </a>
-                    <a href="{% url 'register' %}" class="btn btn-sm btn-danger auth-btn">
-                        Register
-                    </a>
-                {% else %}
-                    <div class="dropdown">
-                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" 
-                           id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-none d-sm-inline mx-1">{{ user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-            </div>
         </div>
-    </nav>
 
-    <!-- Categories Navigation - Visible on mobile -->
-    <div class="mobile-categories-container d-lg-none border-top">
-        <div class="mobile-categories">
-            {% for cat in categories %}
-            <a href="{% url 'posts_by_category' cat.id %}" 
-               class="nav-link nav-pill {% if current_category == cat.id %}active{% endif %}">
-                {{ cat.category_name }}
-            </a>
-            {% endfor %}
+        <!-- Right Side: User Profile Authentication Management Block Context Layer -->
+        <div class="d-flex align-items-center order-2 order-lg-3 ms-0 ms-lg-2">
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-light border rounded px-3 me-2 fw-medium text-dark shadow-none">
+                    Sign In
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-sm btn-primary rounded px-3 fw-medium text-white shadow-sm">
+                    Register
+                </a>
+            {% else %}
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark fw-semibold bg-light px-3 py-2 rounded border" id="userDashboardDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold shadow-sm" style="width: 26px; height: 26px; font-size: 11px;">
+                            {{ user.username|slice:":2"|upper }}
+                        </div>
+                        <span class="d-none d-sm-inline me-1 small">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 rounded-3 mt-2" aria-labelledby="userDashboardDropdown" style="min-width: 180px;">
+                        <li>
+                            <div class="px-3 py-2 text-dark small border-bottom mb-1">
+                                <span class="text-muted d-block small mb-0">Signed in as</span>
+                                <strong class="text-truncate d-block" style="max-width: 140px;">{{ user.username }}</strong>
+                            </div>
+                        </li>
+                        <li><a class="dropdown-item rounded-2 small py-2 text-secondary" href="#"><i class="fas fa-user-cog me-2 text-muted"></i>Account settings</a></li>
+                        <li><hr class="dropdown-divider my-1 text-muted opacity-10"></li>
+                        <li><a class="dropdown-item rounded-2 small py-2 text-danger fw-medium" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
+
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Mobile categories scrolling behavior
-        document.querySelectorAll('.mobile-categories a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Remove active class from all links
-                document.querySelectorAll('.mobile-categories a').forEach(el => {
-                    el.classList.remove('active');
-                });
-                // Add active class to clicked link
-                this.classList.add('active');
-            });
-        });
-    </script>
-</body>
-</html>
+</nav>

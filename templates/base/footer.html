@@ -1,116 +1,130 @@
 {% load static %}
-<footer class="bg-dark text-light pt-5 pb-4">
-    <div class="container">
-        <div class="row g-5">
-            <!-- About -->
-            <div class="col-lg-4 col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="logo-container bg-light-subtle p-2 rounded-circle me-2">
-                        <img src="{% static 'images/logo2.png' %}" alt="RidayaWriteBlogs Logo" height="32">
-                    </div>
-                    <span class="fs-5 fw-semibold">RidayaWriteBlogs</span>
-                </div>
-                <p class="text-secondary mb-4">
-                    Share ideas, stories, and insights with tech enthusiasts and innovators. Join our growing community.
-                </p>
-                <div class="d-flex gap-2">
-                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
 
-            <!-- Quick Links -->
-            <div class="col-lg-2 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3">Quick Links</h6>
-                <ul class="list-unstyled small">
-                    <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
-                    <li><a href="#" class="footer-link">About Us</a></li>
-                    <li><a href="#" class="footer-link">Blog Posts</a></li>
-                    <li><a href="#" class="footer-link">Categories</a></li>
-                    <li><a href="#" class="footer-link">Contact</a></li>
-                </ul>
-            </div>
-
-            <!-- Categories -->
-            <div class="col-lg-3 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3">Categories</h6>
-                <div class="row">
-                    {% for cat in categories|slice:":6" %}
-                    <div class="col-6 mb-2">
-                        <a href="{% url 'posts_by_category' cat.id %}" class="footer-link small">{{ cat.category_name }}</a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Newsletter -->
-            <div class="col-lg-3 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3">Newsletter</h6>
-                <p class="text-secondary small">Get updates and insights in your inbox.</p>
-                <form class="d-flex mb-2" method="post" action="#">
-                    {% csrf_token %}
-                    <input type="email" class="form-control form-control-sm me-2" placeholder="Your email" required>
-                    <button class="btn btn-primary btn-sm" type="submit">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-                <p class="text-secondary small">No spam. Unsubscribe anytime.</p>
-            </div>
+<footer class="pt-5 border-top" style="background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div class="container">
+    
+    <!-- Top Row Layout Base -->
+    <div class="row pb-5 g-4 g-lg-5 justify-content-between text-center text-md-start">
+      
+      <!-- Column 1: Brand & Identity Identity -->
+      <div class="col-lg-4 col-12 mb-3 mb-lg-0">
+        <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
+          <div class="bg-white p-2 rounded-circle me-2 border border-light-subtle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+            <img src="{% static 'images/logo2.png' %}" alt="RidayaWriteBlogs Logo" height="24">
+          </div>
+          <span class="fs-5 fw-bold text-dark tracking-tight">RidayaWriteBlogs</span>
         </div>
-
-        <hr class="mt-5 mb-3 border-secondary-subtle">
-
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <p class="small text-secondary mb-2 mb-md-0">&copy; {% now "Y" %} RidayaWriteBlogs. All rights reserved.</p>
-            <div>
-                <a href="#" class="footer-link small me-3">Terms</a>
-                <a href="#" class="footer-link small me-3">Privacy</a>
-                <a href="#" class="footer-link small">Cookies</a>
-            </div>
+        <p class="text-secondary small mb-4 lh-base mx-auto mx-md-0" style="max-width: 320px;">
+          Share ideas, stories, and insights with tech enthusiasts and innovators. Join our growing community.
+        </p>
+        <div class="d-flex justify-content-center justify-content-md-start gap-2">
+          <a href="#" class="social-icon border border-light-subtle" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon border border-light-subtle" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" class="social-icon border border-light-subtle" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon border border-light-subtle" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
         </div>
+      </div>
+
+      <!-- Column 2: Quick Links -->
+      <div class="col-lg-2 col-md-6 col-6 mb-3 mb-lg-0">
+        <h6 class="text-uppercase fw-bold mb-3 tracking-wider" style="font-size: 0.75rem; letter-spacing: 0.8px; color: #111112;">Quick Links</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0" style="font-size: 0.85rem;">
+          <li><a href="{% url 'home' %}" class="text-secondary text-decoration-none footer-link">Home</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none footer-link">About Us</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none footer-link">Blog Posts</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none footer-link">Categories</a></li>
+          <li><a href="#" class="text-secondary text-decoration-none footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Dynamic Categories (Fixed Stack Layout Pattern) -->
+      <div class="col-lg-2 col-md-6 col-6 mb-3 mb-lg-0">
+        <h6 class="text-uppercase fw-bold mb-3 tracking-wider" style="font-size: 0.75rem; letter-spacing: 0.8px; color: #111112;">Categories</h6>
+        <ul class="list-unstyled d-flex flex-column gap-2 mb-0" style="font-size: 0.85rem;">
+          {% for cat in categories|slice:":6" %}
+            <li>
+              <a href="{% url 'posts_by_category' cat.id %}" class="text-secondary text-decoration-none footer-link text-truncate d-block">
+                {{ cat.category_name }}
+              </a>
+            </li>
+          {% empty %}
+            <li><span class="text-muted small">No active categories.</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Column 4: Premium Briefing Input Interaction Module -->
+      <div class="col-lg-4 col-12 d-flex justify-content-center justify-content-lg-end">
+        <div class="p-4 border bg-white w-100 shadow-sm" style="border-radius: 16px; max-width: 380px; border-color: #e5e5ea !important;">
+          <h6 class="fw-bold mb-1 text-start" style="font-size: 0.95rem; color: #111112;">Newsletter</h6>
+          <p class="text-muted small mb-3 text-start">Get updates and fresh insights sent directly to your inbox.</p>
+          
+          <form method="POST" action="#">
+            {% csrf_token %}
+            <div class="input-group overflow-hidden p-1 bg-light border border-light-subtle" style="border-radius: 12px;">
+              <input type="email" name="email" class="form-control border-0 bg-transparent px-3 shadow-none text-dark" 
+                     placeholder="Your email" required style="font-size: 0.85rem; height: 38px;">
+              <button class="btn btn-dark fw-bold px-4 rounded-3 d-flex align-items-center justify-content-center" 
+                      type="submit" style="font-size: 0.8rem; height: 38px;">
+                Join
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
+
+    
+
+  </div>
+
+  <!-- Bottom Legal Copyright System deck -->
+  <div style="background-color: #ededf0; border-top: 1px solid rgba(0,0,0,0.05);">
+    <div class="container-fluid py-3 d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start gap-2">
+      <small class="text-muted" style="font-size: 0.72rem;">
+        Copyright © {% now "Y" %} RidayaWriteBlogs. All rights reserved.
+      </small>
+      <div class="d-flex align-items-center gap-3" style="font-size: 0.72rem;">
+        <a href="#" class="text-muted text-decoration-none footer-sublink">Terms</a>
+        <span class="text-muted opacity-25">|</span>
+        <a href="#" class="text-muted text-decoration-none footer-sublink">Privacy</a>
+        <span class="text-muted opacity-25">|</span>
+        <a href="#" class="text-muted text-decoration-none footer-sublink">Cookies</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
+<!-- Scoped Application Stylesheet Module -->
 <style>
-    footer {
-        font-size: 15px;
-        background-color: #111;
-    }
-
-    .footer-link {
-        color: #bbb;
-        text-decoration: none;
-        display: inline-block;
-        padding: 3px 0;
-        transition: color 0.2s ease;
-    }
-
-    .footer-link:hover {
-        color: #fff;
-    }
-
-    .social-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: #222;
-        color: #fff;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    .social-icon:hover {
-        background-color: #0d6efd;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    footer hr {
-        opacity: 0.15;
-    }
+  .footer-link {
+    transition: color 0.15s ease-in-out;
+  }
+  .footer-link:hover {
+    color: #000000 !important;
+  }
+  .footer-sublink:hover {
+    color: #000000 !important;
+    text-decoration: underline !important;
+  }
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #212529;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.15s ease-in-out;
+  }
+  .social-icon:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+  }
 </style>

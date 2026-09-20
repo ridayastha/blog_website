@@ -24,6 +24,10 @@
           <form method="POST" novalidate>
             {% csrf_token %}
 
+            {% if next %}
+              <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
             {% for field in form %}
               <div class="form-group mb-4 position-relative">
                 {% if field.name == "username" %}
@@ -65,7 +69,7 @@
             <div class="text-center mb-3">
               <p class="small mb-0">
                 Already have an account?
-                <a href="{% url 'login' %}" class="text-danger fw-semibold">Login</a>
+                <a href="{% url 'login' %}{% if next %}?next={{ next }}{% endif %}" class="text-danger fw-semibold">Login</a>
               </p>
             </div>
 

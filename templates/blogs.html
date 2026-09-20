@@ -3,122 +3,111 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row g-4">
-        <!-- Main Content -->
+    <div class="row g-5">
         <main class="col-lg-8">
             <article class="blog-post">
-                <!-- Post Header -->
                 <header class="mb-4">
-                    <!-- Category Badge -->
                     <div class="mb-3">
                         <a href="{% url 'posts_by_category' single_post.category.id %}" 
-                           class="badge bg-warning text-dark text-decoration-none rounded-pill px-3 py-2">
+                           class="badge bg-warning text-dark text-decoration-none rounded-pill px-3 py-2 fw-semibold">
                             {{ single_post.category }}
                         </a>
                     </div>
                     
-                    <!-- Title -->
-                    <h1 class="display-5 fw-bold mb-3">{{ single_post.title }}</h1>
+                    <h1 class="display-5 fw-bold mb-3 text-dark" style="letter-spacing: -0.5px;">{{ single_post.title }}</h1>
                     
-                    <!-- Meta -->
                     <div class="d-flex align-items-center mb-4">
                         <div class="d-flex align-items-center me-4">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
-                                <i class="fas fa-user"></i>
+                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-2" style="width: 36px; height: 36px; font-size: 12px;">
+                                {{ single_post.author|slice:":2"|upper }}
                             </div>
                             <div>
-                                <small class="text-muted">By {{ single_post.author }}</small>
-                                <small class="text-muted d-block">{{ single_post.created_at|date:"F j, Y" }}</small>
+                                <small class="text-dark fw-semibold d-block">By {{ single_post.author }}</small>
+                                <small class="text-muted d-block" style="font-size: 0.75rem;">{{ single_post.created_at|date:"F j, Y" }}</small>
                             </div>
                         </div>
-                        <div class="text-muted">
+                        <div class="text-muted small">
                             <i class="far fa-clock me-1"></i>
-                            <small>{{ single_post.read_time }} min read</small>
+                            <span>{{ single_post.read_time }} min read</span>
                         </div>
                     </div>
                 </header>
 
-                <!-- Featured Image -->
                 <figure class="mb-4">
                     <img src="{{ single_post.blog_image.url }}" 
-                         class="img-fluid rounded-3 shadow-sm w-100" 
+                         class="img-fluid rounded-4 shadow-lg w-100" 
                          alt="{{ single_post.title }}"
                          style="max-height: 500px; object-fit: cover;">
                 </figure>
 
-                <!-- Post Content -->
                 <section class="article-content mb-5">
-                    <div class="lead mb-4">{{ single_post.short_description|safe }}</div>
-                    <div class="article-body">{{ single_post.blog_body|safe }}</div>
+                    <div class="lead mb-4 text-secondary lh-base">{{ single_post.short_description|safe }}</div>
+                    <div class="article-body text-dark lh-relaxed">{{ single_post.blog_body|safe }}</div>
                 </section>
 
-                <!-- Tags -->
                 <div class="mb-5">
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="text-muted me-2"><i class="fas fa-tags"></i></span>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <span class="text-muted me-1 small"><i class="fas fa-tags"></i></span>
                         {% for tag in single_post.tags.all %}
-                        <a href="#" class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-2">
+                        <a href="#" class="badge bg-white text-secondary text-decoration-none border rounded px-3 py-2 small fw-normal">
                             {{ tag.name }}
                         </a>
                         {% endfor %}
                     </div>
                 </div>
 
-                <!-- Comments Section -->
-                <section class="comments-section border-top pt-4">
-                    <h4 class="h5 mb-4">
-                        <i class="far fa-comments me-2"></i>
+                <section class="comments-section border-top pt-5">
+                    <h4 class="h5 fw-bold text-dark mb-4">
+                        <i class="far fa-comments me-2 text-secondary"></i>
                         Comments ({{ comment_count }})
                     </h4>
 
-                    <!-- Comments List -->
                     {% if comments %}
                     <div class="comments-list mb-5">
                         {% for comment in comments %}
-                        <div class="card border-0 shadow-sm mb-3">
-                            <div class="card-body bg-light">
+                        <div class="card border-0 bg-light rounded-3 mb-3">
+                            <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                                        <i class="fas fa-user"></i>
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold me-3" style="width: 32px; height: 32px; font-size: 11px;">
+                                        {{ comment.user.username|slice:":1"|upper }}
                                     </div>
                                     <div>
-                                        <h5 class="h6 mb-0">{{ comment.user.username }}</h5>
-                                        <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                                        <h5 class="h6 mb-0 fw-bold text-dark">{{ comment.user.username }}</h5>
+                                        <small class="text-muted style" style="font-size: 0.75rem;">{{ comment.created_at|timesince }} ago</small>
                                     </div>
                                 </div>
-                                <p class="card-text mb-0">{{ comment.comment }}</p>
+                                <p class="card-text text-secondary mb-0 small lh-base">{{ comment.comment }}</p>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <div class="alert alert-light text-center py-4 mb-5">
-                        <i class="far fa-comment-dots fa-2x mb-3 text-muted"></i>
-                        <p class="mb-0">No comments yet. Be the first to share your thoughts!</p>
+                    <div class="alert bg-light border-0 text-center py-5 rounded-4 mb-5">
+                        <i class="far fa-comment-dots fa-2x mb-3 text-muted opacity-50"></i>
+                        <p class="mb-0 text-secondary small">No comments yet. Be the first to share your thoughts!</p>
                     </div>
                     {% endif %}
 
-                    <!-- Comment Form -->
-                    <div class="comment-form" id="comment-form">
-                        <h5 class="h6 mb-3">Leave a comment</h5>
+                    <div class="comment-form mb-4" id="comment-form">
+                        <h5 class="fw-bold text-dark mb-3">Leave a comment</h5>
                         {% if user.is_authenticated %}
                         <form method="POST" class="needs-validation" novalidate>
                             {% csrf_token %}
                             <div class="mb-3">
-                                <textarea name="comment" class="form-control" 
+                                <textarea name="comment" class="form-control bg-light border border-light-subtle rounded-3 p-3 text-dark shadow-none" 
                                           placeholder="Write your comment here..." 
-                                          rows="4" required></textarea>
+                                          rows="4" required style="font-size: 0.9rem;"></textarea>
                                 <div class="invalid-feedback">
                                     Please enter your comment.
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <button type="submit" class="btn btn-dark rounded-3 px-4 fw-semibold small py-2">
                                 Post Comment
                             </button>
                         </form>
                         {% else %}
-                        <div class="alert alert-warning">
-                            Please <a href="{% url 'login' %}?next={{ request.path }}#comment-form" class="alert-link">login</a> 
+                        <div class="alert border border-warning-subtle bg-warning bg-opacity-10 rounded-3 text-warning-emphasis small">
+                            Please <a href="{% url 'login' %}?next={{ request.path|urlencode }}%23comment-form" class="alert-link fw-bold">login</a>
                             to post a comment.
                         </div>
                         {% endif %}
@@ -128,108 +117,125 @@
             </article>
         </main>
 
-        <!-- Sidebar -->
         <aside class="col-lg-4">
-            <div class="card border-0 shadow-sm mb-4 bg-light">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3">Search Articles</h3>
-            <form action="{% url 'search' %}" method="get">
-              <div class="input-group">
-                <input
-                  type="search"
-                  name="keyword"
-                  class="form-control rounded-start-pill"
-                  placeholder="Search by title or keyword..."
-                  aria-label="Search"
-                  value="{{ request.GET.keyword|default:'' }}"
-                />
-                <button
-                  class="btn btn-primary rounded-end-pill"
-                  type="submit"
-                  aria-label="Submit Search"
-                >
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-            <!-- Categories -->
-            <div class="card border-0 shadow-sm mb-4 bg-light">
-                <div class="card-body">
-                    <h4 class="h5 mb-3">
-                        <i class="fas fa-folder-open me-2"></i>
-                        Explore Categories
-                    </h4>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for cat in categories %}
-                        <a href="{% url 'posts_by_category' cat.id %}" 
-                           class="badge bg-light text-dark text-decoration-none border rounded-pill px-3 py-2">
-                            {{ cat.category_name }}
-                        </a>
-                        {% endfor %}
+            <div style="position: -webkit-sticky; position: sticky; top: 32px; height: auto;">
+                
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4 bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-light text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-search fa-sm text-dark"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Search Knowledge Base</h6>
+                        </div>
+                        <form action="{% url 'search' %}" method="get">
+                            <div class="input-group bg-light rounded-3 p-1 border border-light-subtle">
+                                <input type="search" name="keyword" class="form-control bg-transparent border-0 shadow-none ps-2 small text-dark" placeholder="Type keywords..." aria-label="Search" value="{{ request.GET.keyword|default:'' }}" />
+                                <button class="btn btn-dark rounded-3 px-3 py-1 small d-flex align-items-center" type="submit">
+                                    <i class="fas fa-arrow-right fa-xs"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
 
-            <!-- Newsletter Widget -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-body bg-light rounded-3">
-                    <h4 class="h5 mb-3">Newsletter</h4>
-                    <p class="small text-muted mb-3">
-                        Get the latest {{ category }} articles delivered to your inbox
-                    </p>
-                    <form>
-                        <div class="mb-3">
-                            <input type="email" class="form-control form-control-sm" placeholder="Your email">
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4 bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-info bg-opacity-10 text-info rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; color: #0dcaf0 !important;">
+                                <i class="fas fa-folder-open fa-sm"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Explore Categories</h6>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill">
-                            Subscribe
-                        </button>
-                    </form>
+                        <div class="d-flex flex-wrap gap-2 pt-1">
+                            {% for cat in categories %}
+                            <a href="{% url 'posts_by_category' cat.id %}" 
+                               class="btn btn-sm btn-white text-secondary bg-white border rounded px-3 py-1fw-semibold transition-all category-link-item" style="font-size: 0.8rem;">
+                                {{ cat.category_name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Social Links -->
-        <div class="card border-0 bg-light shadow-sm mt-4">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3">Social Media</h3>
-            <p class="small text-muted mb-3">
-                        We are available on:
-                    </p>
-            <div class="d-flex justify-content-center">
-              <a
-                href="#"
-                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-              >
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a
-                href="#"
-                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-              >
-                <i class="fab fa-github"></i>
-              </a>
-              <a
-                href="#"
-                class="btn btn-outline-dark rounded-circle me-2 d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-              >
-                <i class="fab fa-linkedin-in"></i>
-              </a>
-              <a
-                href="#"
-                class="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-              >
-                <i class="fab fa-youtube"></i>
-              </a>
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4 bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-envelope-open text-warning fa-sm"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Inbox Insights</h6>
+                        </div>
+                        <p class="text-secondary small mb-4 lh-base" style="font-size: 0.875rem;">
+                            Get the latest {{ single_post.category.category_name|default:"engineering" }} articles delivered directly to your inbox.
+                        </p>
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+                            <div class="mb-2">
+                                <input type="email" name="subscriber_email" class="form-control bg-light border border-light-subtle rounded-3 py-2 ps-3 small text-dark shadow-none" placeholder="name@domain.com" required style="font-size: 0.85rem;" />
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100 rounded-3 fw-semibold small py-2">
+                                Subscribe to Journal
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4 bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-danger bg-opacity-10 text-danger rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; color: #dc3545 !important;">
+                                <i class="fas fa-share-alt fa-sm"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Social Connection</h6>
+                        </div>
+                        <p class="text-secondary small mb-4 lh-base" style="font-size: 0.875rem;">
+                            Join our active external deployment channels to track pipeline builds and system updates.
+                        </p>
+                        <div class="d-flex gap-2 justify-content-start">
+                            <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="Twitter">
+                                <i class="fab fa-twitter text-dark"></i>
+                            </a>
+                            <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="GitHub">
+                                <i class="fab fa-github text-dark"></i>
+                            </a>
+                            <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in text-dark"></i>
+                            </a>
+                            <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="YouTube">
+                                <i class="fab fa-youtube text-dark"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          </div>
-        </div>
         </aside>
     </div>
 </div>
+
+<style>
+    .category-link-item {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .category-link-item:hover {
+        background-color: #f8f9fa !important;
+        border-color: #dee2e6 !important;
+        color: #212529 !important;
+        transform: translateY(1px);
+    }
+    .social-icon-link {
+        width: 40px; 
+        height: 40px;
+        transition: all 0.2s ease;
+        background-color: #f8f9fa;
+    }
+    .social-icon-link:hover {
+        background-color: #000000 !important;
+        border-color: #000000 !important;
+    }
+    .social-icon-link:hover i {
+        color: #ffffff !important;
+    }
+</style>
 {% endblock %}

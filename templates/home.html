@@ -1,234 +1,426 @@
-<!-- Home.html -->
-{% extends 'base/base.html' %} {% load static %} {% block content %}
-<div class="container py-4">
-    
-  {% for post in featured_post %}
-  {% if forloop.first %}
-    <div class="mb-5 rounded-3 overflow-hidden position-relative" style="min-height: 300px;">
-      <!-- Background Image -->
-      <div class="position-absolute top-0 start-0 w-100 h-100" style="
-        background-image: url('{{ post.blog_image.url }}');
-        background-size: cover;
-        background-position: center;
-        z-index: 1;
-      "></div>
+{% extends 'base/base.html' %} 
+{% load static %} 
 
-      <!-- Overlay and Content -->
-      <div class="position-relative z-2 h-100 d-flex align-items-end p-4 p-md-5" style="background: rgba(0, 0, 0, 0.5);">
-        <div class="text-white w-100">
-          <div class="badge bg-primary bg-opacity-25 text-white mb-3 px-3 py-2 rounded-pill d-inline-block">
-            Featured Post
-          </div>
+{% block content %}
+<div class="container-fluid">
 
-          <h1 class="display-5 fw-bold">
-            <a href="{% url 'blogs' post.slug %}" class="text-white text-decoration-none">
-              {{ post.title }}
-            </a>
-          </h1>
-          <p class="lead mb-4">{{ post.short_description|truncatewords:25 }}</p>
-          <a href="{% url 'blogs' post.slug %}" class="btn btn-primary btn-lg rounded-pill px-4">
-            Read More <i class="fas fa-arrow-right ms-2"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-{% endfor %}
-
-
-  <!-- Featured Posts Section -->
-  <section class="mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="section-title m-0">Featured Posts</h4>
-      <a href="#" class="text-decoration-none">View All</a>
-    </div>
-    <div class="row g-4">
-      {% for post in featured_post %} {% if not forloop.first %}
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm card-hover h-100">
-          {% if post.blog_image %}
-          <img
-            src="{{ post.blog_image.url }}"
-            class="card-img-top"
-            style="height: 200px; object-fit: cover"
-            alt="{{ post.title }}"
-          />
-          {% endif %}
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3">
-              <div
-                class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2"
-              >
-                <i class="fas fa-user"></i>
-              </div>
-              <div>
-                <small class="text-muted">{{ post.author }}</small>
-                <small class="text-muted d-block"
-                  >{{ post.created_at|timesince }} ago</small
-                >
-              </div>
+    <div class="mb-4 position-relative">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h5 class="fw-bold text-dark mb-0">Browse by Tech Stack</h5>
+                <p class="text-muted small mb-0">Filtered vectors across major engineering ecosystems.</p>
             </div>
-            <h3 class="h5 mb-3">
-              <a
-                href="{% url 'blogs' post.slug %}"
-                class="text-decoration-none text-dark"
-                >{{ post.title }}</a
-              >
-            </h3>
-            <p class="card-text mb-4">
-              {{ post.short_description | truncatewords:20 }}
-            </p>
-            <a
-              href="{% url 'blogs' post.slug %}"
-              class="btn btn-sm btn-outline-primary rounded-pill align-self-start"
-            >
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-      {% endif %} {% endfor %}
-    </div>
-  </section>
-
-  <!-- Recent Articles Section -->
-  <section class="mb-5">
-    <div class="row">
-      <div class="col-lg-8">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="section-title m-0">Recent Articles</h2>
-          <a href="#" class="text-decoration-none">View All</a>
-        </div>
-        <div class="row g-4 mb-4">
-          {% for post in posts %}
-          <div class="col-md-6">
-            <div class="card border-0 shadow-sm card-hover h-100">
-              <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                  <div
-                    class="me-2"
-                    style="
-                      width: 40px;
-                      height: 40px;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      background-color: rgba(13, 110, 253, 0.1);
-                      border-radius: 50%;
-                    "
-                  >
-                    <i class="fas fa-user text-primary"></i>
-                  </div>
-                  <div>
-                    <small class="text-muted">{{ post.author }}</small>
-                    <small class="text-muted d-block"
-                      >{{ post.created_at|timesince }} ago</small
-                    >
-                  </div>
-                </div>
-                <h3 class="h5 mb-3">
-                  <a
-                    href="{% url 'blogs' post.slug %}"
-                    class="text-decoration-none text-dark"
-                    >{{ post.title }}</a
-                  >
-                </h3>
-                <p class="card-text mb-4">
-                  {{ post.short_description | truncatewords:15 }}
-                </p>
-                <a
-                  href="{% url 'blogs' post.slug %}"
-                  class="btn btn-sm btn-outline-primary rounded-pill align-self-start"
-                >
-                  Read More
-                </a>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- Sidebar -->
-      <div class="col-lg-4">
-        <!-- Search -->
-        <div class="card border-0 shadow-sm mb-4 bg-light">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3">Search Articles</h3>
-            <form action="{% url 'search' %}" method="get">
-              <div class="input-group">
-                <input
-                  type="search"
-                  name="keyword"
-                  class="form-control rounded-start-pill"
-                  placeholder="Search by title or keyword..."
-                  aria-label="Search"
-                  value="{{ request.GET.keyword|default:'' }}"
-                />
-                <button
-                  class="btn btn-primary rounded-end-pill"
-                  type="submit"
-                  aria-label="Submit Search"
-                >
-                  <i class="fas fa-search"></i>
+            <div class="d-none d-md-flex gap-2">
+                <button class="btn btn-sm btn-light border rounded-circle shadow-none d-flex align-items-center justify-content-center" id="slideLeftBtn" style="width: 32px; height: 32px;" aria-label="Slide Left">
+                    <i class="fas fa-chevron-left fa-xs text-secondary"></i>
                 </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Community Box -->
-        <div class="card border-0 shadow-sm mb-4">
-          <div class="card-body p-4 bg-light bg-opacity-5 rounded-3">
-            <div class="d-flex align-items-center mb-3">
-              <h3 class="h5 mb-0">Join Our Community</h3>
+                <button class="btn btn-sm btn-light border rounded-circle shadow-none d-flex align-items-center justify-content-center" id="slideRightBtn" style="width: 32px; height: 32px;" aria-label="Slide Right">
+                    <i class="fas fa-chevron-right fa-xs text-secondary"></i>
+                </button>
             </div>
-            <p class="mb-4">
-              Share your knowledge, ask questions, and connect with other
-              developers in our growing community.
-            </p>
-            {% if not user.is_authenticated %}
-            <a
-              href="{% url 'register' %}"
-              class="btn btn-primary w-100 rounded-pill"
-            >
-              Sign Up Now
-            </a>
-            {% else %}
-            <a href="" class="btn btn-outline-primary w-100 rounded-pill">
-              Your Profile
-            </a>
-            {% endif %}
-          </div>
         </div>
 
-        <!-- Newsletter -->
-        <div class="card border-0 bg-light shadow-sm mb-4">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3">Newsletter</h3>
+        <div class="category-scroll-wrapper d-flex align-items-center gap-2 overflow-x-auto pb-2" id="categorySliderTrack" style="scroll-behavior: smooth; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+            
+            <div class="scroll-item" style="scroll-snap-align: start; flex: 0 0 auto;">
+                <a href="{% url 'home' %}" class="btn btn-sm rounded px-4 py-2 border fw-semibold text-xs tracking-wide transition-all {% if not current_category %}btn-dark border-dark text-white shadow-sm{% else %}btn-white text-secondary link-primary bg-white{% endif %}">
+                    All Perspectives
+                </a>
+            </div>
 
-            <p class="small text-muted mb-3">
-              Get the latest articles delivered to your inbox !
-            </p>
-            <form>
-              <div class="mb-3">
-                <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Your email address"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary w-100 rounded-pill">
-                Subscribe
-              </button>
-            </form>
-          </div>
+            {% for cat in categories %}
+            <div class="scroll-item" style="scroll-snap-align: start; flex: 0 0 auto;">
+                <a href="{% url 'posts_by_category' cat.id %}" class="btn btn-sm rounded px-4 py-2 border fw-semibold text-xs tracking-wide transition-all {% if current_category == cat.id %}btn-primary border-primary text-white shadow-sm{% else %}btn-white text-secondary link-primary bg-white{% endif %}">
+                    {{ cat.category_name }}
+                </a>
+            </div>
+            {% empty %}
+            <div class="text-muted small py-2">No active categories found.</div>
+            {% endfor %}
         </div>
+    </div>
+    
+    <div id="featuredHeroCarousel" class="carousel slide mb-5 pb-4 border-bottom" data-bs-ride="carousel" data-bs-interval="2000">
+        <div class="carousel-inner">
+            {% for post in featured_post %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}" style="min-height: 350px;">
+                    <div class="row g-4 align-items-center">
+                        
+                        <div class="col-lg-5 order-2 order-lg-1">
+                            <span class="badge bg-danger bg-opacity-10 text-danger mb-3 px-3 py-2 rounded fw-semibold small tracking-wider text-uppercase">
+                                Highlighted Feature
+                            </span>
+                            <h2 class="fs-2 fw-extrabold text-dark tracking-tight mb-3">
+                                <a href="{% url 'blogs' post.slug %}" class="text-dark text-decoration-none link-primary">
+                                    {{ post.title|truncatechars:60 }}
+                                </a>
+                            </h2>
+                            <p class="text-secondary fs-6 mb-4 lh-base text-truncate-custom">
+                                {{ post.short_description|truncatewords:25 }}
+                            </p>
+                            
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 14px;">
+                                    {{ post.author|slice:":2"|upper }}
+                               </div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-bold text-dark small">{{ post.author }}</h6>
+                                    <span class="text-muted small">{{ post.created_at|timesince }} ago</span>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'blogs' post.slug %}" class="btn btn-dark btn-md rounded px-4 shadow-sm">
+                                Read Full Article <i class="fas fa-chevron-right ms-2 small"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="col-lg-7 order-1 order-lg-2">
+                            <div class="position-relative rounded-4 overflow-hidden shadow-lg w-100" style="height: 350px;">
+                                {% if post.blog_image %}
+                                    <img src="{{ post.blog_image.url }}" alt="{{ post.title }}" class="w-100 h-100 object-fit-cover">
+                                {% else %}
+                                    <div class="w-100 h-100 bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center">
+                                        <span class="text-muted"><i class="fas fa-image fa-3x"></i></span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% empty %}
+                <div class="py-5 text-center text-muted">No featured updates found.</div>
+            {% endfor %}
+        </div>
+
+        {% if featured_post|length > 1 %}
+            <div class="d-flex justify-content-start gap-2 mt-3 position-relative" style="z-index: 10;">
+                <button class="btn btn-sm btn-light border rounded-circle shadow-none d-flex align-items-center justify-content-center" type="button" data-bs-target="#featuredHeroCarousel" data-bs-slide="prev" style="width: 32px; height: 32px;">
+                    <i class="fas fa-chevron-left text-secondary fa-xs"></i>
+                </button>
+                <button class="btn btn-sm btn-light border rounded-circle shadow-none d-flex align-items-center justify-content-center" type="button" data-bs-target="#featuredHeroCarousel" data-bs-slide="next" style="width: 32px; height: 32px;">
+                    <i class="fas fa-chevron-right text-secondary fa-xs"></i>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row g-5">
 
         
-      </div>
+        
+        <div class="col-lg-8">
+    
+    <!-- Side-by-Side Horizontal Row (Inbox Insights & Join the Dev Pipeline) -->
+<div class="row g-4 mb-5">
+    
+    <!-- Inbox Insights Column -->
+    <div class="col-md-6">
+        <div class="card border border-light-subtle shadow-sm rounded-4 h-100 bg-white">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="fas fa-envelope-open text-warning fa-sm"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark m-0">Inbox Insights</h6>
+                    </div>
+                    <p class="text-secondary small mb-4 lh-base" style="font-size: 0.875rem;">
+                        Receive highly curated engineering journals and tech stack breakdowns delivered directly to your inbox.
+                    </p>
+                </div>
+                <form action="#" method="POST" class="m-0">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <input type="email" name="subscriber_email" class="form-control bg-light border border-light-subtle rounded-3 py-2 ps-3 small text-dark shadow-none" placeholder="name@domain.com" required style="font-size: 0.85rem;" />
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100 rounded-3 fw-semibold small py-2">
+                        Subscribe to Journal
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  </section>
-  
+
+    <!-- Join the Dev Pipeline Column -->
+    <div class="col-md-6">
+        <div class="card border border-light-subtle shadow-sm rounded-4 h-100 bg-white">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: rgba(88, 101, 242, 0.1); color: #5865F2;">
+                            <i class="fab fa-discord fa-sm"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark m-0">Join the Dev Pipeline</h6>
+                    </div>
+                    <p class="text-secondary small mb-4 lh-base" style="font-size: 0.875rem;">
+                        Get real-time event notifications for new publications, code snippets, and architectural breakdowns directly in our engineering server.
+                    </p>
+                </div>
+                <!-- Margin-top auto wrapper pushes this block down to seamlessly match the form layout height -->
+                <div class="mt-auto">
+                    <a href="https://discord.gg/YOUR_INVITE_LINK" target="_blank" rel="noopener noreferrer" class="btn w-100 rounded-3 fw-semibold small py-2 d-flex align-items-center justify-content-center gap-2 text-white discord-btn" style="background-color: #5865F2; border: none; transition: background-color 0.2s ease;">
+                        <i class="fab fa-discord"></i> Follow via Discord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
+
+    <!-- Latest Insights Header Stream Area -->
+    <div class="d-flex align-items-center justify-content-between mb-5">
+        <div>
+            <h2 class="h4 fw-bold text-dark mb-1" style="letter-spacing: -0.3px;">Latest Insights</h2>
+            <p class="text-muted small mb-0 d-none d-sm-block">Explore freshly shared human intelligence and code perspectives.</p>
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-sm btn-white border rounded-2 px-3 fw-medium text-dark stream-action-btn">
+            See all posts
+        </a>
+    </div>
+
+    <!-- Core Articles Dynamic Generation Stream -->
+    <div class="row g-4 mb-5">
+        {% for post in posts %}
+            <div class="col-12">
+                <div class="card border-0 bg-transparent h-100 article-card">
+                    <div class="row g-3 g-md-4 align-items-start">
+                        
+                        {% if post.blog_image %}
+                            <div class="col-4 col-md-3">
+                                <a href="{% url 'blogs' post.slug %}" class="d-block text-decoration-none">
+                                    <div class="ratio ratio-1x1 rounded-3 overflow-hidden bg-light image-zoom-frame">
+                                        <img src="{{ post.blog_image.url }}" class="object-fit-cover stream-img" alt="{{ post.title }}" loading="lazy">
+                                    </div>
+                                </a>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="{% if post.blog_image %}col-8 col-md-9{% else %}col-12{% endif %} d-flex flex-column justify-content-between position-relative align-self-stretch">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                    <span class="fw-bold text-uppercase px-2 py-1 rounded bg-dark text-white tracking-wider" style="font-size: 9px; letter-spacing: 0.8px;">
+                                        {% if post.category %}{{ post.category.category_name }}{% else %}Perspective{% endif %}
+                                    </span>
+                                    <span class="text-muted small opacity-50">&bull;</span>
+                                    <span class="text-muted small" style="font-size: 0.8rem;">{{ post.created_at|timesince }} ago</span>
+                                </div>
+                                
+                                <h3 class="h5 fw-bold mb-2 title-anchor">
+                                    <a href="{% url 'blogs' post.slug %}" class="text-dark text-decoration-none lh-base stream-title-link">
+                                        {{ post.title }}
+                                    </a>
+                                </h3>
+                                
+                                <p class="text-secondary d-none d-md-block small mb-3 lh-relaxed" style="color: #48484a !important;">
+                                    {{ post.short_description|truncatewords:22 }}
+                                </p>
+                            </div>
+                            
+                            <div class="d-flex align-items-center justify-content-between mt-auto pt-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white font-weight-medium shadow-sm" style="width: 22px; height: 22px; font-size: 10px;">
+                                        {{ post.author|slice:":1"|upper }}
+                                    </div>
+                                    <span class="text-dark fw-semibold small" style="color: #1d1d1f !important;">{{ post.author }}</span>
+                                </div>
+                                <a href="{% url 'blogs' post.slug %}" class="text-decoration-none fw-bold small read-action-link">
+                                    Read <i class="fas fa-arrow-right ms-1 small arrow-icon"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pt-4 border-bottom opacity-25" style="border-color: #d1d1d6 !important;"></div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted mb-0">No entries have been indexed to this pipeline stream yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+        <div class="col-lg-4">
+            <div style="position: -webkit-sticky; position: sticky; top: 100px; height: auto;">
+                
+                <div class="card border border-light-subtle shadow-sm rounded-4 mb-4 bg-white">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-light text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-search fa-sm text-dark"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Search Knowledge Base</h6>
+                        </div>
+                        <form action="{% url 'search' %}" method="get">
+                            <div class="input-group bg-light rounded-3 p-1 border border-light-subtle">
+                                <input type="search" name="keyword" class="form-control bg-transparent border-0 shadow-none ps-2 small text-dark" placeholder="Type keywords..." aria-label="Search" value="{{ request.GET.keyword|default:'' }}" />
+                                <button class="btn btn-dark rounded-3 px-3 py-1 small d-flex align-items-center" type="submit">
+                                    <i class="fas fa-arrow-right fa-xs"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            
+
+                
+
+                <div class="card border border-light-subtle shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-body p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-danger bg-opacity-10 text-danger rounded-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; color: #dc3545 !important;">
+                                <i class="fas fa-share-alt fa-sm"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark m-0">Social Connection</h6>
+                        </div>
+                        <p class="text-secondary small mb-4 lh-base" style="font-size: 0.875rem;">
+                            Join our active external deployment channels to track pipeline builds and system updates.
+                        </p>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-start">
+                        <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="Twitter" style="width: 38px; height: 38px;">
+                            <i class="fab fa-twitter text-dark"></i>
+                        </a>
+                        <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="GitHub" style="width: 38px; height: 38px;">
+                            <i class="fab fa-github text-dark"></i>
+                        </a>
+                        <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="LinkedIn" style="width: 38px; height: 38px;">
+                            <i class="fab fa-linkedin-in text-dark"></i>
+                        </a>
+                        <a href="#" class="btn btn-light border rounded-3 d-flex align-items-center justify-content-center social-icon-link" aria-label="YouTube" style="width: 38px; height: 38px;">
+                            <i class="fab fa-youtube text-dark"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            </div> </div>
+        
+    </div>
+</div>
+
+<style>
+    .article-card {
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .image-zoom-frame {
+        border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    .stream-img {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stream-title-link {
+        transition: color 0.15s ease-in-out;
+    }
+    .read-action-link {
+        color: #0066cc;
+        transition: color 0.15s ease-in-out;
+    }
+    .arrow-icon {
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stream-action-btn:hover {
+        background-color: #ffffff !important;
+        border-color: #86868b !important;
+        color: #000000 !important;
+    }
+
+    .article-card:hover .stream-title-link {
+        color: #0066cc !important;
+    }
+    .article-card:hover .stream-img {
+        transform: scale(1.04);
+    }
+    .article-card:hover .arrow-icon {
+        transform: translateX(3px);
+    }
+    .article-card:hover .read-action-link {
+        color: #0044aa !important;
+    }
+
+    .category-scroll-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    .category-scroll-wrapper {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .category-scroll-wrapper .btn {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.85rem !important;
+    }
+    .category-scroll-wrapper .btn-white:hover {
+        background-color: #f8f9fa !important;
+        border-color: #dee2e6 !important;
+        color: #212529 !important;
+        transform: translateY(1px);
+    }
+
+    .text-truncate-custom {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+    .discord-btn:hover {
+        background-color: #4752C4 !important;
+        color: #ffffff !important;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const track = document.getElementById("categorySliderTrack");
+        const leftBtn = document.getElementById("slideLeftBtn");
+        const rightBtn = document.getElementById("slideRightBtn");
+
+        if (!track || !leftBtn || !rightBtn) return;
+
+        const scrollDistance = 240; 
+
+        leftBtn.addEventListener("click", () => {
+            track.scrollBy({ left: -scrollDistance, behavior: "smooth" });
+        });
+
+        rightBtn.addEventListener("click", () => {
+            track.scrollBy({ left: scrollDistance, behavior: "smooth" });
+        });
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        track.addEventListener("mousedown", (e) => {
+            isDown = true;
+            track.classList.add("dragging");
+            track.style.scrollBehavior = "auto"; 
+            startX = e.pageX - track.offsetLeft;
+            scrollLeft = track.scrollLeft;
+        });
+
+        track.addEventListener("mouseleave", () => { 
+            isDown = false; 
+            track.classList.remove("dragging");
+        });
+
+        track.addEventListener("mouseup", () => { 
+            isDown = false; 
+            track.classList.remove("dragging");
+            track.style.scrollBehavior = "smooth";
+        });
+
+        track.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - track.offsetLeft;
+            const walk = (x - startX) * 1.5; 
+            track.scrollLeft = scrollLeft - walk;
+        });
+    });
+</script>
 {% endblock %}
